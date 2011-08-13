@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Construct.NET.Attributes;
 
@@ -21,11 +22,28 @@ namespace Construct.NET
 
         public static Type GetTarget(this Type type)
         {
-            var attributes = type.GetCustomAttributes(typeof (ConstructTargetAttribute), false).Cast<ConstructTargetAttribute>();
+            var attributes =
+                type.GetCustomAttributes(typeof (ConstructTargetAttribute), false).Cast<ConstructTargetAttribute>();
             if(!attributes.Any())
                 throw new Exception(string.Format("{0} has no defined ConstructTarget attribute", type));
             
             return attributes.First().Target;
+        }
+
+        public static IOrderedEnumerable<Tuple<int, PropertyInfo>> GetTargetProperties(this Type target)
+        {
+            var result = new List<Tuple<int, PropertyInfo>>();
+
+            foreach (var property in target.GetProperties())
+            {
+                var attributes = property.GetCustomAttributes(typeof (ConstructFieldAttribute), false);
+                if (!attributes.Any())
+                    continue;
+                var fieldInfo = attributes.First() as ConstructFieldAttribute;
+                result.Add(new Tuple<int, PropertyInfo>(fieldInfo.SerializationOrder, property));
+            }
+
+            return result.OrderBy(x => x.Item1);
         }
     }
 }

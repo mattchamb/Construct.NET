@@ -7,7 +7,15 @@ namespace Construct.NET
     {
         public T ParseStream<T>(Stream inputStream, ConstructPlan constructPlan)
         {
-            throw new NotImplementedException();
+            using (var binReader = new BinaryReader(inputStream))
+            {
+                var obj = (T)Activator.CreateInstance(typeof (T));
+                foreach (var planAction in constructPlan.PlanActions)
+                {
+                    planAction.Execute(binReader, obj);
+                }
+                return obj;
+            }
         }
     }
 }

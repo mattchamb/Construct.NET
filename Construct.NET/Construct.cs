@@ -11,7 +11,6 @@ namespace Construct.NET
         {
             Parser = constructParser;
             Planner = constructPlanner;
-
             Plan = Planner.CreateConstructPlan(typeof (T));
         }
 
@@ -21,8 +20,7 @@ namespace Construct.NET
 
         public T Parse(Stream inputStream)
         {
-            return default(T);
+            return Parser.ParseStream<T>(inputStream, Plan);
         }
-
     }
 }

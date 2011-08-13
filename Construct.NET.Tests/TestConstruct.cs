@@ -7,12 +7,26 @@ using Construct.NET.Attributes;
 namespace Construct.NET.Tests
 {
     [Construct]
-    class TestConstruct
+    class TestIntConstruct
     {
-        [ConstructField(SerializationOrder = 1)]
+        [ConstructField(1)]
         public int First { get; set; }
 
-        [ConstructField(SerializationOrder = 2)]
+        [ConstructField(2)]
         public int Second { get; set; }
+    }
+
+    [Construct]
+    class TestDoubleConstruct
+    {
+        [ConstructField(1)]
+        public double Value { get; set; }
+    }
+
+    [Construct]
+    class TestStringConstruct
+    {
+        [ConstructField(1)]
+        public string Value { get; set; }
     }
 }
