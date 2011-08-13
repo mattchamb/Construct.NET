@@ -19,7 +19,7 @@ namespace Construct.NET
             TargetProperty = targetProperty;
         }
 
-        public abstract void Execute(BinaryReader reader, object targetObject);
+        public abstract void Execute(BinaryReader reader, object targetObj);
 
 
         protected void CheckTypes(object targetObj)
@@ -37,8 +37,6 @@ namespace Construct.NET
                                                   TargetProperty, TargetType));
             }
         }
-
-
     }
 
     [ConstructTarget(typeof(int))]
@@ -159,6 +157,33 @@ namespace Construct.NET
             var value = Encoding.ASCII.GetString(characters.ToArray());
             var setter = TargetProperty.GetSetMethod();
             setter.Invoke(targetObj, new object[] { value });
+        }
+    }
+
+    [ConstructTarget(typeof(NestedAction))]
+    public class NestedAction : ConstructPlanAction
+    {
+        public NestedAction(PropertyInfo targetProperty) : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof(NestedAction); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            //This is bad, shouldnt depend on a concrete type.
+            var planner = new ConstructPlanner();
+            var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.PropertyType);
+            var obj = Activator.CreateInstance(TargetProperty.PropertyType);
+            foreach (var planAction in nestedTypePlan.PlanActions)
+            {
+                planAction.Execute(reader, obj);
+            }
+            var setter = TargetProperty.GetSetMethod();
+            setter.Invoke(targetObj, new [] { obj });
         }
     }
     

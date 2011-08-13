@@ -8,6 +8,9 @@ namespace Construct.NET
 {
     internal class ConstructPlanner : IConstructPlanner
     {
+        private static object _syncRoot = new object();
+        public static Dictionary<Type, ConstructPlan> CachedPlans = new Dictionary<Type, ConstructPlan>();
+
         private Dictionary<Type, Type> _mappings;
         private Dictionary<Type, Type> TypeActionMappings
         {
@@ -24,6 +27,11 @@ namespace Construct.NET
 
         public ConstructPlan CreateConstructPlan(Type type)
         {
+            if(CachedPlans.ContainsKey(type))
+            {
+                return CachedPlans[type];
+            }
+
             var result = new ConstructPlan
                              {
                                  PlanActions = new List<ConstructPlanAction>()
@@ -37,9 +45,18 @@ namespace Construct.NET
 
             foreach (var property in constructProperties)
             {
-                var action = TypeActionMappings[property.Item2.PropertyType];
-                result.PlanActions.Add((ConstructPlanAction)Activator.CreateInstance(action, property.Item2));
+                if(property.Item2.PropertyType.IsConstruct())
+                {
+                    result.PlanActions.Add(new NestedAction(property.Item2));
+                }
+                else
+                {
+                    var actionType = TypeActionMappings[property.Item2.PropertyType];
+                    result.PlanActions.Add((ConstructPlanAction)Activator.CreateInstance(actionType, property.Item2));
+                }
             }
+
+            CachedPlans.Add(type, result);
             return result;
         }
 

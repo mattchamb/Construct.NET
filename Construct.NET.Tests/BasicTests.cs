@@ -68,5 +68,23 @@ namespace Construct.NET.Tests
                 Assert.AreEqual(expectedValue, result.Value);
             }
         }
+
+        [Test]
+        public void NestedTest()
+        {
+            var construct = ConstructFactory.CreateConstruct<TestNestedConstruct>();
+            byte[] data = { 0xff, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00 };
+            using (var memStream = new MemoryStream(data))
+            {
+                memStream.Seek(0, SeekOrigin.Begin);
+                var result = construct.Parse(memStream);
+
+                var expectedValue = 255;
+
+                Assert.AreEqual(expectedValue, result.First);
+                Assert.AreEqual(expectedValue, result.Nested.First);
+                Assert.AreEqual(expectedValue, result.Nested.Second);
+            }
+        }
     }
 }
