@@ -11,16 +11,19 @@ namespace Construct.NET
     public abstract class ConstructPlanAction
     {
         public PropertyInfo TargetProperty { get; private set; }
-
+        protected MethodInfo SetterMethod;
+        protected MethodInfo GetterMethod;
         public abstract Type TargetType { get; }
 
         protected ConstructPlanAction(PropertyInfo targetProperty)
         {
             TargetProperty = targetProperty;
+            SetterMethod = TargetProperty.GetSetMethod();
+            GetterMethod = TargetProperty.GetGetMethod();
         }
 
         public abstract void Execute(BinaryReader reader, object targetObj);
-
+        public abstract void Output(BinaryWriter writer, object targetObj);
 
         protected void CheckTypes(object targetObj)
         {
@@ -39,26 +42,119 @@ namespace Construct.NET
         }
     }
 
-    [ConstructTarget(typeof(int))]
-    public class IntAction : ConstructPlanAction
+    [ConstructTarget(typeof(Int16))]
+    public class Int16Action : ConstructPlanAction
     {
-        public IntAction(PropertyInfo targetProperty) 
+        public Int16Action(PropertyInfo targetProperty)
             : base(targetProperty)
         {
         }
 
         public override Type TargetType
         {
-            get { return typeof (int); }
+            get { return typeof(Int16); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)
         {
             CheckTypes(targetObj);
 
-            int value = reader.ReadInt32();
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new object[] {value});
+            var value = reader.ReadInt16();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (Int16)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
+        }
+    }
+
+    [ConstructTarget(typeof(UInt16))]
+    public class UInt16Action : ConstructPlanAction
+    {
+        public UInt16Action(PropertyInfo targetProperty)
+            : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof(UInt16); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            CheckTypes(targetObj);
+
+            var value = reader.ReadUInt16();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (UInt16)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
+        }
+    }
+
+    [ConstructTarget(typeof(Int32))]
+    public class Int32Action : ConstructPlanAction
+    {
+        public Int32Action(PropertyInfo targetProperty) 
+            : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof (Int32); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            CheckTypes(targetObj);
+
+            var value = reader.ReadInt32();
+            SetterMethod.Invoke(targetObj, new object[] {value});
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (Int32)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
+        }
+    }
+
+    [ConstructTarget(typeof(UInt32))]
+    public class UInt32Action : ConstructPlanAction
+    {
+        public UInt32Action(PropertyInfo targetProperty)
+            : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof(UInt32); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            CheckTypes(targetObj);
+
+            var value = reader.ReadUInt32();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (UInt32)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
         }
     }
 
@@ -79,9 +175,44 @@ namespace Construct.NET
         {
             CheckTypes(targetObj);
 
-            byte value = reader.ReadByte();
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new object[] { value });
+            var value = reader.ReadByte();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (byte)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
+        }
+    }
+
+    [ConstructTarget(typeof(float))]
+    public class FloatAction : ConstructPlanAction
+    {
+        public FloatAction(PropertyInfo targetProperty)
+            : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof(float); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            CheckTypes(targetObj);
+
+            var value = reader.ReadSingle();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (float)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
         }
     }
 
@@ -102,9 +233,15 @@ namespace Construct.NET
         {
             CheckTypes(targetObj);
 
-            double value = reader.ReadDouble();
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new object[] { value });
+            var value = reader.ReadDouble();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (double)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
         }
     }
 
@@ -125,9 +262,15 @@ namespace Construct.NET
         {
             CheckTypes(targetObj);
 
-            char value = reader.ReadChar();
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new object[] { value });
+            var value = reader.ReadChar();
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (char)GetterMethod.Invoke(targetObj, null);
+            writer.Write(value);
         }
     }
 
@@ -155,8 +298,16 @@ namespace Construct.NET
                 characters.Add(read);
             }
             var value = Encoding.ASCII.GetString(characters.ToArray());
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new object[] { value });
+            SetterMethod.Invoke(targetObj, new object[] { value });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            var value = (string)GetterMethod.Invoke(targetObj, null);
+            var stringBytes = Encoding.ASCII.GetBytes(value);
+            writer.Write(stringBytes);
+            writer.Write((byte)0);
         }
     }
 
@@ -174,7 +325,7 @@ namespace Construct.NET
 
         public override void Execute(BinaryReader reader, object targetObj)
         {
-            //This is bad, shouldnt depend on a concrete type.
+            //This is bad, shouldn't depend on a concrete type.
             var planner = new ConstructPlanner();
             var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.PropertyType);
             var obj = Activator.CreateInstance(TargetProperty.PropertyType);
@@ -182,8 +333,19 @@ namespace Construct.NET
             {
                 planAction.Execute(reader, obj);
             }
-            var setter = TargetProperty.GetSetMethod();
-            setter.Invoke(targetObj, new [] { obj });
+            SetterMethod.Invoke(targetObj, new [] { obj });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            //This is bad, shouldn't depend on a concrete type.
+            var planner = new ConstructPlanner();
+            var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.PropertyType);
+            var obj = GetterMethod.Invoke(targetObj, null);
+            foreach (var planAction in nestedTypePlan.PlanActions)
+            {
+                planAction.Output(writer, obj);
+            }
         }
     }
     

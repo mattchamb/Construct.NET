@@ -2,8 +2,10 @@
 
 namespace Construct.NET
 {
-    public interface IConstruct<out T>
+    public interface IConstruct<T>
     {
         T Parse(Stream inputStream);
+        Stream Output(T obj);
+        Stream Output(T obj, Stream dest);
     }
 }

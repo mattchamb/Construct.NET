@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace Construct.NET.Tests
@@ -28,8 +25,8 @@ namespace Construct.NET.Tests
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = construct.Parse(memStream);
 
-                int expectedFirst = 255;
-                int expectedSecond = -1;
+                const int expectedFirst = 255;
+                const int expectedSecond = -1;
 
                 Assert.AreEqual(expectedFirst, result.First);
                 Assert.AreEqual(expectedSecond, result.Second);
@@ -47,7 +44,7 @@ namespace Construct.NET.Tests
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = construct.Parse(memStream);
 
-                double expectedValue = 3.5d;
+                const double expectedValue = 3.5d;
 
                 Assert.AreEqual(expectedValue, result.Value);
             }
@@ -63,7 +60,7 @@ namespace Construct.NET.Tests
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = construct.Parse(memStream);
 
-                var expectedValue = "test";
+                const string expectedValue = "test";
 
                 Assert.AreEqual(expectedValue, result.Value);
             }
@@ -79,12 +76,53 @@ namespace Construct.NET.Tests
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = construct.Parse(memStream);
 
-                var expectedValue = 255;
+                const int expectedValue = 255;
 
                 Assert.AreEqual(expectedValue, result.First);
                 Assert.AreEqual(expectedValue, result.Nested.First);
                 Assert.AreEqual(expectedValue, result.Nested.Second);
             }
+        }
+
+        [Test]
+        public void OutputIntTest()
+        {
+            var construct = ConstructFactory.CreateConstruct<TestIntConstruct>();
+
+            byte[] expectedData = { 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff };
+
+            var obj = new TestIntConstruct
+                          {
+                              First = 255,
+                              Second = -1
+                          };
+
+            var outStream = construct.Output(obj);
+            outStream.Seek(0, SeekOrigin.Begin);
+            var outData = new byte[8];
+            outStream.Read(outData, 0, outData.Length);
+
+            Assert.IsTrue(expectedData.SequenceEqual(outData));
+        }
+
+        [Test]
+        public void OutputStringTest()
+        {
+            var construct = ConstructFactory.CreateConstruct<TestStringConstruct>();
+
+            byte[] expectedData = { (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0 };
+
+            var obj = new TestStringConstruct
+                          {
+                              Value = "test"
+                          };
+
+            var outStream = construct.Output(obj);
+            outStream.Seek(0, SeekOrigin.Begin);
+            var outData = new byte[5];
+            outStream.Read(outData, 0, outData.Length);
+
+            Assert.IsTrue(expectedData.SequenceEqual(outData));
         }
     }
 }

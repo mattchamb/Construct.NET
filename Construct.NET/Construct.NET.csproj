@@ -43,10 +43,12 @@
     <Compile Include="Attributes\ConstructAttributes.cs" />
     <Compile Include="Construct.cs" />
     <Compile Include="ConstructFactory.cs" />
+    <Compile Include="ConstructOutputter.cs" />
     <Compile Include="ConstructParser.cs" />
     <Compile Include="ConstructPlan.cs" />
     <Compile Include="ConstructPlanner.cs" />
     <Compile Include="IConstruct.cs" />
+    <Compile Include="IConstructOutputter.cs" />
     <Compile Include="IConstructParser.cs" />
     <Compile Include="IConstructPlanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
