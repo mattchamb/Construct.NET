@@ -27,6 +27,11 @@ namespace Construct.NET
 
         public ConstructPlan CreateConstructPlan(Type type)
         {
+            if (!type.IsConstruct())
+            {
+                throw new ArgumentException(string.Format("The specified type ({0}) is not a Construct", type), "type");
+            }
+
             if(CachedPlans.ContainsKey(type))
             {
                 return CachedPlans[type];
@@ -36,16 +41,17 @@ namespace Construct.NET
                              {
                                  PlanActions = new List<ConstructPlanAction>()
                              };
-            if(!type.IsConstruct())
-            {
-                throw new ArgumentException(string.Format("The specified type ({0}) is not a Construct", type), "type");
-            }
-
+            
             var constructProperties = type.GetTargetProperties();
 
             foreach (var property in constructProperties)
             {
-                if(property.Item2.PropertyType.IsConstruct())
+                if(property.Item2.PropertyType.IsArray)
+                {
+                    //Gets the array length as the value of the property immediately before - need to make it more flexible.
+                    result.PlanActions.Add(new ArrayAction(constructProperties.First(x => x.Item1 == property.Item1-1).Item2, property.Item2));
+                }
+                else if(property.Item2.PropertyType.IsConstruct())
                 {
                     result.PlanActions.Add(new NestedAction(property.Item2));
                 }

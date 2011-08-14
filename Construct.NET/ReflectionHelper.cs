@@ -45,5 +45,15 @@ namespace Construct.NET
 
             return result.OrderBy(x => x.Item1);
         }
+
+        public static int GetSerializationOrder(this PropertyInfo propInfo)
+        {
+            var attributes =
+                propInfo.GetCustomAttributes(typeof(ConstructFieldAttribute), false).Cast<ConstructFieldAttribute>();
+            if (!attributes.Any())
+                throw new Exception(string.Format("{0} has no defined ConstructTarget attribute", propInfo));
+
+            return attributes.First().SerializationOrder;
+        }
     }
 }

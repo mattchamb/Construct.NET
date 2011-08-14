@@ -124,5 +124,25 @@ namespace Construct.NET.Tests
 
             Assert.IsTrue(expectedData.SequenceEqual(outData));
         }
+
+        [Test]
+        public void ArrayTest()
+        {
+            var construct = ConstructFactory.CreateConstruct<TestArrayConstruct>();
+
+            byte[] data = { 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x4, 0x00, 0x00, 0x00 };
+            using (var memStream = new MemoryStream(data))
+            {
+                memStream.Seek(0, SeekOrigin.Begin);
+                var result = construct.Parse(memStream);
+
+                Assert.AreEqual(2, result.Length);
+                Assert.AreEqual(1, result.Values[0].First);
+                Assert.AreEqual(2, result.Values[0].Second);
+                Assert.AreEqual(3, result.Values[1].First);
+                Assert.AreEqual(4, result.Values[1].Second);
+            }
+        }
+
     }
 }

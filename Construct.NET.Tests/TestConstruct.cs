@@ -38,4 +38,13 @@ namespace Construct.NET.Tests
         [ConstructField(2)]
         public TestIntConstruct Nested { get; set; }
     }
+
+    [Construct]
+    class TestArrayConstruct
+    {
+        [ConstructField(1)]
+        public int Length { get; set; }
+        [ConstructField(2)]
+        public TestIntConstruct[] Values { get; set; }
+    }
 }

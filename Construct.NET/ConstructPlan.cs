@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Construct.NET.Attributes;
@@ -308,6 +309,69 @@ namespace Construct.NET
             var stringBytes = Encoding.ASCII.GetBytes(value);
             writer.Write(stringBytes);
             writer.Write((byte)0);
+        }
+    }
+
+    [ConstructTarget(typeof(Array))]
+    public class ArrayAction : ConstructPlanAction
+    {
+        public ArrayAction(PropertyInfo lengthProperty, PropertyInfo targetProperty)
+            : base(targetProperty)
+        {
+            if (!(targetProperty.GetSerializationOrder() > lengthProperty.GetSerializationOrder()))
+            {
+                throw new Exception("Cannot deserialize an array without knowing its length - it must use a property assigned before the array.");
+            }
+            _arrayLengthProperty = lengthProperty;
+        }
+
+        private readonly PropertyInfo _arrayLengthProperty;
+
+        public override Type TargetType
+        {
+            get { return typeof(Array); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            //CheckTypes(targetObj);
+            var arrayLength = (int)_arrayLengthProperty.GetGetMethod().Invoke(targetObj, null);
+            var planner = new ConstructPlanner();
+            var arrayElementType = TargetProperty.PropertyType.GetElementType();
+            Array array = Array.CreateInstance(arrayElementType, arrayLength);
+            if(arrayElementType.IsConstruct())
+            {
+                var arrayTypePlan = planner.CreateConstructPlan(arrayElementType);
+                for(int i = 0; i < arrayLength; i++)
+                {
+                    var obj = Activator.CreateInstance(arrayElementType);
+                    foreach (var planAction in arrayTypePlan.PlanActions)
+                    {
+                        planAction.Execute(reader, obj);
+                    }
+                    array.SetValue(obj, i);
+                }
+                SetterMethod.Invoke(targetObj, new [] {array});
+            }
+            else
+            {
+                //TODO: evaluate how the design can handle arrays of primitives without repeating code.
+                //var actionTypes = typeof(ConstructPlanAction).GetDerivedTypes();
+                //var actions = actionTypes.ToDictionary(action => action.GetTarget());
+                //for (int i = 0; i < arrayLength; i++)
+                //{
+                //    var obj = Activator.CreateInstance(arrayElementType);
+                //    
+                //    planAction.Execute(reader, obj);
+                //    array.SetValue(obj, i);
+                //}
+            }
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            
         }
     }
 
