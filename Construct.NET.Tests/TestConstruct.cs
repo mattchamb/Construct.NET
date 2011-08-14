@@ -47,4 +47,20 @@ namespace Construct.NET.Tests
         [ConstructField(2)]
         public TestIntConstruct[] Values { get; set; }
     }
+
+    [Flags]
+    public enum TestEnum : byte
+    {
+        Node = 0,
+        Test = 1,
+        Test2 = 2,
+        Test3 = 4
+    }
+
+    [Construct]
+    class TestEnumConstruct
+    {
+        [ConstructField(1)]
+        public TestEnum Value { get; set; }
+    }
 }

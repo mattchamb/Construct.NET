@@ -55,5 +55,11 @@ namespace Construct.NET
 
             return attributes.First().SerializationOrder;
         }
+
+        public static Dictionary<Type, Type> GetTypeActionMappings()
+        {
+            var actionTypes = typeof(ConstructPlanAction).GetDerivedTypes();
+            return actionTypes.ToDictionary(action => action.GetTarget());
+        }
     }
 }

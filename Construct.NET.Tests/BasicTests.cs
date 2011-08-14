@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -141,6 +142,24 @@ namespace Construct.NET.Tests
                 Assert.AreEqual(2, result.Values[0].Second);
                 Assert.AreEqual(3, result.Values[1].First);
                 Assert.AreEqual(4, result.Values[1].Second);
+            }
+        }
+
+        [Test]
+        public void EnumTest()
+        {
+            var construct = ConstructFactory.CreateConstruct<TestEnumConstruct>();
+
+            byte[] data = { 0x03, 0x00, 0x00, 0x00 };
+            using (var memStream = new MemoryStream(data))
+            {
+                memStream.Seek(0, SeekOrigin.Begin);
+                var result = construct.Parse(memStream);
+                TestEnum test = TestEnum.Test | TestEnum.Test2;
+                //Assert.AreEqual(TestEnum.Test, result.Value);
+                Assert.IsTrue(result.Value.HasFlag(TestEnum.Test));
+                Assert.IsTrue(result.Value.HasFlag(TestEnum.Test2));
+                Assert.IsFalse(result.Value.HasFlag(TestEnum.Test3));
             }
         }
 

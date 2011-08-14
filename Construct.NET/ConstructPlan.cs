@@ -41,6 +41,8 @@ namespace Construct.NET
                                                   TargetProperty, TargetType));
             }
         }
+
+        protected internal abstract object GetValue(BinaryReader reader);
     }
 
     [ConstructTarget(typeof(Int16))]
@@ -60,8 +62,8 @@ namespace Construct.NET
         {
             CheckTypes(targetObj);
 
-            var value = reader.ReadInt16();
-            SetterMethod.Invoke(targetObj, new object[] { value });
+            var value = GetValue(reader);
+            SetterMethod.Invoke(targetObj, new [] { value });
         }
 
         public override void Output(BinaryWriter writer, object targetObj)
@@ -69,6 +71,11 @@ namespace Construct.NET
             CheckTypes(targetObj);
             var value = (Int16)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadInt16();
         }
     }
 
@@ -99,6 +106,11 @@ namespace Construct.NET
             var value = (UInt16)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
         }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadUInt16();
+        }
     }
 
     [ConstructTarget(typeof(Int32))]
@@ -127,6 +139,11 @@ namespace Construct.NET
             CheckTypes(targetObj);
             var value = (Int32)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadInt32();
         }
     }
 
@@ -157,6 +174,11 @@ namespace Construct.NET
             var value = (UInt32)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
         }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadUInt32();
+        }
     }
 
     [ConstructTarget(typeof(byte))]
@@ -185,6 +207,11 @@ namespace Construct.NET
             CheckTypes(targetObj);
             var value = (byte)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadByte();
         }
     }
 
@@ -215,6 +242,11 @@ namespace Construct.NET
             var value = (float)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
         }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadSingle();
+        }
     }
 
     [ConstructTarget(typeof(double))]
@@ -243,6 +275,11 @@ namespace Construct.NET
             CheckTypes(targetObj);
             var value = (double)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadDouble();
         }
     }
 
@@ -273,6 +310,11 @@ namespace Construct.NET
             var value = (char)GetterMethod.Invoke(targetObj, null);
             writer.Write(value);
         }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            return reader.ReadChar();
+        }
     }
 
     [ConstructTarget(typeof(string))]
@@ -292,14 +334,8 @@ namespace Construct.NET
         {
             CheckTypes(targetObj);
 
-            var characters = new List<byte>();
-            byte read;
-            while(reader.BaseStream.CanRead && (read = reader.ReadByte()) != 0)
-            {
-                characters.Add(read);
-            }
-            var value = Encoding.ASCII.GetString(characters.ToArray());
-            SetterMethod.Invoke(targetObj, new object[] { value });
+            var value = GetValue(reader);
+            SetterMethod.Invoke(targetObj, new [] { value });
         }
 
         public override void Output(BinaryWriter writer, object targetObj)
@@ -309,6 +345,17 @@ namespace Construct.NET
             var stringBytes = Encoding.ASCII.GetBytes(value);
             writer.Write(stringBytes);
             writer.Write((byte)0);
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            var characters = new List<byte>();
+            byte read;
+            while (reader.BaseStream.CanRead && (read = reader.ReadByte()) != 0)
+            {
+                characters.Add(read);
+            }
+            return Encoding.ASCII.GetString(characters.ToArray());
         }
     }
 
@@ -351,27 +398,90 @@ namespace Construct.NET
                     }
                     array.SetValue(obj, i);
                 }
-                SetterMethod.Invoke(targetObj, new [] {array});
             }
             else
             {
                 //TODO: evaluate how the design can handle arrays of primitives without repeating code.
-                //var actionTypes = typeof(ConstructPlanAction).GetDerivedTypes();
-                //var actions = actionTypes.ToDictionary(action => action.GetTarget());
-                //for (int i = 0; i < arrayLength; i++)
-                //{
-                //    var obj = Activator.CreateInstance(arrayElementType);
-                //    
-                //    planAction.Execute(reader, obj);
-                //    array.SetValue(obj, i);
-                //}
+                var actions = ReflectionHelper.GetTypeActionMappings();
+                if (!actions.ContainsKey(arrayElementType))
+                {
+                    throw new Exception(
+                        string.Format("The enum {0} of base type {1} does not have a handler mapped for the base type.",
+                                      TargetProperty.PropertyType, arrayElementType));
+                }
+                var action = actions[arrayElementType];
+                for (int i = 0; i < arrayLength; i++)
+                {
+                    var planAction = (ConstructPlanAction)Activator.CreateInstance(action, new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
+                    var result = planAction.GetValue(reader);
+                    array.SetValue(result, i);
+                }
             }
+            SetterMethod.Invoke(targetObj, new[] { array });
         }
 
         public override void Output(BinaryWriter writer, object targetObj)
         {
             CheckTypes(targetObj);
             
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            // This wont really work for an array, it needs more info (like the length and type)
+            // and i want to be able to call this separately to Execute, and the info
+            // wont be present when the ctor is called, so i cant set it then.
+            throw new NotImplementedException();
+        }
+    }
+
+    [ConstructTarget(typeof(Enum))]
+    public class EnumAction : ConstructPlanAction
+    {
+        public EnumAction(PropertyInfo targetProperty)
+            : base(targetProperty)
+        {
+        }
+
+        public override Type TargetType
+        {
+            get { return typeof(Enum); }
+        }
+
+        public override void Execute(BinaryReader reader, object targetObj)
+        {
+            //CheckTypes(targetObj);
+            var enumBaseType = TargetProperty.PropertyType.GetEnumUnderlyingType();
+            var actions = ReflectionHelper.GetTypeActionMappings();
+            if(!actions.ContainsKey(enumBaseType))
+            {
+                throw new Exception(
+                    string.Format("The enum {0} of base type {1} does not have a handler mapped for the base type.",
+                                  TargetProperty.PropertyType, enumBaseType));
+            }
+            var action = actions[enumBaseType];
+            var planAction = (ConstructPlanAction)Activator.CreateInstance(action, new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
+            var result = planAction.GetValue(reader);
+
+            bool isFlags = TargetProperty.PropertyType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+
+            if (!isFlags && !TargetProperty.PropertyType.IsEnumDefined(result))
+            {
+                throw new Exception(string.Format("The enum {0} is not defined for the value {1}",
+                                                  TargetProperty.PropertyType, result));
+            }
+            SetterMethod.Invoke(targetObj, new[] { result });
+        }
+
+        public override void Output(BinaryWriter writer, object targetObj)
+        {
+            CheckTypes(targetObj);
+            throw new NotImplementedException();
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -389,14 +499,7 @@ namespace Construct.NET
 
         public override void Execute(BinaryReader reader, object targetObj)
         {
-            //This is bad, shouldn't depend on a concrete type.
-            var planner = new ConstructPlanner();
-            var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.PropertyType);
-            var obj = Activator.CreateInstance(TargetProperty.PropertyType);
-            foreach (var planAction in nestedTypePlan.PlanActions)
-            {
-                planAction.Execute(reader, obj);
-            }
+            var obj = GetValue(reader);
             SetterMethod.Invoke(targetObj, new [] { obj });
         }
 
@@ -410,6 +513,19 @@ namespace Construct.NET
             {
                 planAction.Output(writer, obj);
             }
+        }
+
+        protected internal override object GetValue(BinaryReader reader)
+        {
+            //This is bad, shouldn't depend on a concrete type.
+            var planner = new ConstructPlanner();
+            var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.PropertyType);
+            var obj = Activator.CreateInstance(TargetProperty.PropertyType);
+            foreach (var planAction in nestedTypePlan.PlanActions)
+            {
+                planAction.Execute(reader, obj);
+            }
+            return obj;
         }
     }
     

@@ -16,7 +16,7 @@ namespace Construct.NET
         {
             get
             {
-                return _mappings ?? (_mappings = GetTypeActionMappings());
+                return _mappings ?? (_mappings = ReflectionHelper.GetTypeActionMappings());
             }
         }
 
@@ -51,6 +51,10 @@ namespace Construct.NET
                     //Gets the array length as the value of the property immediately before - need to make it more flexible.
                     result.PlanActions.Add(new ArrayAction(constructProperties.First(x => x.Item1 == property.Item1-1).Item2, property.Item2));
                 }
+                else if(property.Item2.PropertyType.IsEnum)
+                {
+                    result.PlanActions.Add(new EnumAction(property.Item2));
+                }
                 else if(property.Item2.PropertyType.IsConstruct())
                 {
                     result.PlanActions.Add(new NestedAction(property.Item2));
@@ -66,10 +70,5 @@ namespace Construct.NET
             return result;
         }
 
-        private Dictionary<Type, Type> GetTypeActionMappings()
-        {
-            var actionTypes = typeof (ConstructPlanAction).GetDerivedTypes();
-            return actionTypes.ToDictionary(action => action.GetTarget());
-        }
     }
 }
