@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -161,6 +162,18 @@ namespace Construct.NET.Tests
                 Assert.IsTrue(result.Value.HasFlag(TestEnum.Test2));
                 Assert.IsFalse(result.Value.HasFlag(TestEnum.Test3));
             }
+        }
+
+        enum TestEnum2
+        {
+            Int32,
+            UInt32
+        }
+
+        [Test]
+        public void DynamicTest()
+        {
+            dynamic dyn = new DynamicConstruct();
         }
 
     }

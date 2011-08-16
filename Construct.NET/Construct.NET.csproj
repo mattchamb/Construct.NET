@@ -47,6 +47,7 @@
     <Compile Include="ConstructParser.cs" />
     <Compile Include="ConstructPlan.cs" />
     <Compile Include="ConstructPlanner.cs" />
+    <Compile Include="DynamicConstruct.cs" />
     <Compile Include="IConstruct.cs" />
     <Compile Include="IConstructOutputter.cs" />
     <Compile Include="IConstructParser.cs" />
