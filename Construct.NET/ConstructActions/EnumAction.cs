@@ -31,7 +31,7 @@ namespace Construct.NET
                                   TargetProperty.PropertyType, enumBaseType));
             }
             var action = actions[enumBaseType];
-            var planAction = (ConstructPlanAction)Activator.CreateInstance(action, new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
+            var planAction = (ConstructPlanAction)Activator.CreateInstance(action.First(), new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
             var result = planAction.GetValue(reader);
 
             bool isFlags = TargetProperty.PropertyType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();

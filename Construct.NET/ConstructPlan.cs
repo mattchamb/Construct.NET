@@ -4,6 +4,11 @@ namespace Construct.NET
 {
     internal class ConstructPlan
     {
-        public IList<ConstructPlanAction> PlanActions { get; set; }
+        public ConstructPlan()
+        {
+            PlanActions = new List<ConstructPlanAction>();
+        }
+
+        public IList<ConstructPlanAction> PlanActions { get; private set; }
     }
 }

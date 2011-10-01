@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 
@@ -58,7 +59,7 @@ namespace Construct.NET
                 var action = actions[arrayElementType];
                 for (int i = 0; i < arrayLength; i++)
                 {
-                    var planAction = (ConstructPlanAction)Activator.CreateInstance(action, new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
+                    var planAction = (ConstructPlanAction)Activator.CreateInstance(action.First(), new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
                     var result = planAction.GetValue(reader);
                     array.SetValue(result, i);
                 }

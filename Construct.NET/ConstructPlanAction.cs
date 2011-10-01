@@ -10,6 +10,8 @@ namespace Construct.NET
         protected MethodInfo SetterMethod;
         protected MethodInfo GetterMethod;
         public abstract Type TargetType { get; }
+        public PropertyInfo ConditionalProperty { get; private set; }
+        public Func<object, bool> ConditionalFunction { get; private set; }
 
         protected ConstructPlanAction(PropertyInfo targetProperty)
         {
@@ -20,6 +22,7 @@ namespace Construct.NET
 
         public abstract void Execute(BinaryReader reader, object targetObj);
         public abstract void Output(BinaryWriter writer, object targetObj);
+        protected internal abstract object GetValue(BinaryReader reader);
 
         protected void CheckTypes(object targetObj)
         {
@@ -37,6 +40,12 @@ namespace Construct.NET
             }
         }
 
-        protected internal abstract object GetValue(BinaryReader reader);
+        public bool IsConditionalAction
+        {
+            get
+            {
+                return ConditionalProperty != null && ConditionalFunction != null;
+            }
+        }
     }
 }

@@ -12,8 +12,8 @@ namespace Construct.NET
         private static object _syncRoot = new object();
         public static Dictionary<Type, ConstructPlan> CachedPlans = new Dictionary<Type, ConstructPlan>();
 
-        private Dictionary<Type, Type> _mappings;
-        private Dictionary<Type, Type> TypeActionMappings
+        private Dictionary<Type, List<Type>> _mappings;
+        private Dictionary<Type, List<Type>> TypeActionMappings
         {
             get
             {
@@ -38,33 +38,32 @@ namespace Construct.NET
                 return CachedPlans[type];
             }
 
-            var constructPlan = new ConstructPlan
-                             {
-                                 PlanActions = new List<ConstructPlanAction>()
-                             };
+            var constructPlan = new ConstructPlan();
             
             var constructProperties = type.GetTargetProperties();
 
             foreach (var property in constructProperties)
             {
+                ConstructPlanAction action;
                 if(property.Property.PropertyType.IsArray)
                 {
                     //Gets the array length as the value of the property immediately before - need to make it more flexible.
-                    constructPlan.PlanActions.Add(new ArrayAction(constructProperties.First(x => x.SerializationOrder == property.SerializationOrder-1).Property, property.Property));
+                    action = new ArrayAction(constructProperties.First(x => x.SerializationOrder == property.SerializationOrder-1).Property, property.Property);
                 }
                 else if(property.Property.PropertyType.IsEnum)
                 {
-                    constructPlan.PlanActions.Add(new EnumAction(property.Property));
+                    action = new EnumAction(property.Property);
                 }
                 else if(property.Property.PropertyType.IsConstruct())
                 {
-                    constructPlan.PlanActions.Add(new NestedAction(property.Property));
+                    action = new NestedAction(property.Property);
                 }
                 else
                 {
                     var actionType = TypeActionMappings[property.Property.PropertyType];
-                    constructPlan.PlanActions.Add((ConstructPlanAction)Activator.CreateInstance(actionType, property.Property));
+                    action = (ConstructPlanAction)Activator.CreateInstance(actionType.First(), property.Property);
                 }
+                constructPlan.PlanActions.Add(action);
             }
             CachedPlans.Add(type, constructPlan);
             return constructPlan;

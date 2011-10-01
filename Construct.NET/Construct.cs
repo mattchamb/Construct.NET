@@ -16,7 +16,7 @@ namespace Construct.NET
         internal static IConstructPlanner Planner { get; private set; }
         internal static IConstructOutputter Outputter { get; private set; }
 
-        public static T Parse<T>(Stream inputStream)
+        public static T Parse<T>(Stream inputStream) where T : new()
         {
             return Parser.ParseStream<T>(inputStream, CreatePlan<T>());
         }

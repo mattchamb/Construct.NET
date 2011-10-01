@@ -4,6 +4,6 @@ namespace Construct.NET.Interfaces
 {
     internal interface IConstructParser
     {
-        T ParseStream<T>(Stream inputStream, ConstructPlan constructPlan);
+        T ParseStream<T>(Stream inputStream, ConstructPlan constructPlan) where T : new();
     }
 }

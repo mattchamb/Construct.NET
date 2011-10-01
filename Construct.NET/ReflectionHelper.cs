@@ -11,7 +11,7 @@ namespace Construct.NET
     {
         public static bool IsConstruct(this Type type)
         {
-            return type.GetCustomAttributes(typeof (ConstructAttribute), true).Any();
+            return type.GetCustomAttributes(typeof (ConstructAttribute), false).Any();
         }
 
         //TODO: Adjust where to search for derived types so that it is easier to extend
@@ -56,10 +56,11 @@ namespace Construct.NET
             return attributes.First().SerializationOrder;
         }
 
-        public static Dictionary<Type, Type> GetTypeActionMappings()
+        public static Dictionary<Type, List<Type>> GetTypeActionMappings()
         {
             var actionTypes = typeof(ConstructPlanAction).GetDerivedTypes();
-            return actionTypes.ToDictionary(action => action.GetTarget());
+            var actionGroups = actionTypes.GroupBy(action => action.GetTarget());
+            return actionGroups.ToDictionary(actionGroup => actionGroup.Key, actionGroup => actionGroup.ToList());
         }
     }
 
