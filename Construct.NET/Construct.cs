@@ -1,41 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
+using Construct.NET.Interfaces;
 
 namespace Construct.NET
 {
-    public class Construct<T> : IConstruct<T>
+    public static class Construct
     {
-        public Construct(IConstructPlanner constructPlanner, IConstructParser constructParser, IConstructOutputter constructOutputter)
+        static Construct()
         {
-            Parser = constructParser;
-            Planner = constructPlanner;
-            Outputter = constructOutputter;
-            Plan = Planner.CreateConstructPlan(typeof (T));
+            Parser = new ConstructParser();
+            Planner = new ConstructPlanner();
+            Outputter = new ConstructOutputter();
         }
 
-        public ConstructPlan Plan { get; private set; }
-        public IConstructParser Parser { get; private set; }
-        public IConstructPlanner Planner { get; private set; }
-        public IConstructOutputter Outputter { get; private set; }
+        internal static IConstructParser Parser { get; private set; }
+        internal static IConstructPlanner Planner { get; private set; }
+        internal static IConstructOutputter Outputter { get; private set; }
 
-        public T Parse(Stream inputStream)
+        public static T Parse<T>(Stream inputStream)
         {
-            return Parser.ParseStream<T>(inputStream, Plan);
+            return Parser.ParseStream<T>(inputStream, CreatePlan<T>());
         }
 
-        public Stream Output(T obj)
+        public static Stream Output<T>(T obj)
         {
             return Output(obj, new MemoryStream());
         }
 
-        public Stream Output(T obj, Stream dest)
+        public static Stream Output<T>(T obj, Stream dest)
         {
             var binWriter = new BinaryWriter(dest);
-            Outputter.Output(obj, binWriter, Plan);
+            Outputter.Output(obj, binWriter, CreatePlan<T>());
             return dest;
+        }
+
+        private static ConstructPlan CreatePlan<T>()
+        {
+            return Planner.CreateConstructPlan(typeof(T));
         }
     }
 }

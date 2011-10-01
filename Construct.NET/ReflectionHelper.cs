@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Construct.NET.Attributes;
+
 
 namespace Construct.NET
 {
@@ -30,9 +30,9 @@ namespace Construct.NET
             return attributes.First().Target;
         }
 
-        public static IOrderedEnumerable<Tuple<int, PropertyInfo>> GetTargetProperties(this Type target)
+        public static IOrderedEnumerable<OrderedProperty> GetTargetProperties(this Type target)
         {
-            var result = new List<Tuple<int, PropertyInfo>>();
+            var result = new List<OrderedProperty>();
 
             foreach (var property in target.GetProperties())
             {
@@ -40,10 +40,10 @@ namespace Construct.NET
                 if (!attributes.Any())
                     continue;
                 var fieldInfo = attributes.First() as ConstructFieldAttribute;
-                result.Add(new Tuple<int, PropertyInfo>(fieldInfo.SerializationOrder, property));
+                result.Add(new OrderedProperty(fieldInfo.SerializationOrder, property));
             }
 
-            return result.OrderBy(x => x.Item1);
+            return result.OrderBy(x => x.SerializationOrder);
         }
 
         public static int GetSerializationOrder(this PropertyInfo propInfo)
@@ -60,6 +60,17 @@ namespace Construct.NET
         {
             var actionTypes = typeof(ConstructPlanAction).GetDerivedTypes();
             return actionTypes.ToDictionary(action => action.GetTarget());
+        }
+    }
+
+    internal class OrderedProperty
+    {
+        public int SerializationOrder { get; private set; }
+        public PropertyInfo Property { get; private set; }
+        public OrderedProperty(int serializationOrder, PropertyInfo property)
+        {
+            SerializationOrder = serializationOrder;
+            Property = property;
         }
     }
 }

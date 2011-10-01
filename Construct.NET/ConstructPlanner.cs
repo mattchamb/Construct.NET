@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Construct.NET.Attributes;
+
 using System.Reflection;
+using Construct.NET.Interfaces;
 
 namespace Construct.NET
 {
@@ -37,7 +38,7 @@ namespace Construct.NET
                 return CachedPlans[type];
             }
 
-            var result = new ConstructPlan
+            var constructPlan = new ConstructPlan
                              {
                                  PlanActions = new List<ConstructPlanAction>()
                              };
@@ -46,28 +47,27 @@ namespace Construct.NET
 
             foreach (var property in constructProperties)
             {
-                if(property.Item2.PropertyType.IsArray)
+                if(property.Property.PropertyType.IsArray)
                 {
                     //Gets the array length as the value of the property immediately before - need to make it more flexible.
-                    result.PlanActions.Add(new ArrayAction(constructProperties.First(x => x.Item1 == property.Item1-1).Item2, property.Item2));
+                    constructPlan.PlanActions.Add(new ArrayAction(constructProperties.First(x => x.SerializationOrder == property.SerializationOrder-1).Property, property.Property));
                 }
-                else if(property.Item2.PropertyType.IsEnum)
+                else if(property.Property.PropertyType.IsEnum)
                 {
-                    result.PlanActions.Add(new EnumAction(property.Item2));
+                    constructPlan.PlanActions.Add(new EnumAction(property.Property));
                 }
-                else if(property.Item2.PropertyType.IsConstruct())
+                else if(property.Property.PropertyType.IsConstruct())
                 {
-                    result.PlanActions.Add(new NestedAction(property.Item2));
+                    constructPlan.PlanActions.Add(new NestedAction(property.Property));
                 }
                 else
                 {
-                    var actionType = TypeActionMappings[property.Item2.PropertyType];
-                    result.PlanActions.Add((ConstructPlanAction)Activator.CreateInstance(actionType, property.Item2));
+                    var actionType = TypeActionMappings[property.Property.PropertyType];
+                    constructPlan.PlanActions.Add((ConstructPlanAction)Activator.CreateInstance(actionType, property.Property));
                 }
             }
-
-            CachedPlans.Add(type, result);
-            return result;
+            CachedPlans.Add(type, constructPlan);
+            return constructPlan;
         }
 
     }

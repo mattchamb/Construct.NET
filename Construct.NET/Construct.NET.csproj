@@ -40,19 +40,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ConstructAttributes.cs" />
+    <Compile Include="ConstructActions\ArrayAction.cs" />
+    <Compile Include="ConstructActions\AsciiStringAction.cs" />
+    <Compile Include="Attributes\ConstructAttribute.cs" />
+    <Compile Include="Attributes\ConstructFieldAttribute.cs" />
+    <Compile Include="Attributes\ConstructTargetAttribute.cs" />
+    <Compile Include="NestingType.cs" />
+    <Compile Include="ConstructActions\ByteAction.cs" />
+    <Compile Include="ConstructActions\CharAction.cs" />
     <Compile Include="Construct.cs" />
-    <Compile Include="ConstructFactory.cs" />
     <Compile Include="ConstructOutputter.cs" />
     <Compile Include="ConstructParser.cs" />
     <Compile Include="ConstructPlan.cs" />
+    <Compile Include="ConstructPlanAction.cs" />
     <Compile Include="ConstructPlanner.cs" />
-    <Compile Include="IConstruct.cs" />
-    <Compile Include="IConstructOutputter.cs" />
-    <Compile Include="IConstructParser.cs" />
-    <Compile Include="IConstructPlanner.cs" />
+    <Compile Include="ConstructActions\DoubleAction.cs" />
+    <Compile Include="ConstructActions\EnumAction.cs" />
+    <Compile Include="ConstructActions\FloatAction.cs" />
+    <Compile Include="Interfaces\IConstructOutputter.cs" />
+    <Compile Include="Interfaces\IConstructParser.cs" />
+    <Compile Include="Interfaces\IConstructPlanner.cs" />
+    <Compile Include="ConstructActions\Int16Action.cs" />
+    <Compile Include="ConstructActions\Int32Action.cs" />
+    <Compile Include="ConstructActions\NestedAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="ConstructActions\UInt16Action.cs" />
+    <Compile Include="ConstructActions\UInt32Action.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
