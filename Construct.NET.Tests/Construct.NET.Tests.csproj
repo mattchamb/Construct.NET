@@ -41,9 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicTests.cs" />
+    <Compile Include="ParserTests.cs" />
+    <Compile Include="OutputterTests.cs" />
+    <Compile Include="PlannerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestConstruct.cs" />
+    <Compile Include="TestConstructs\TestArrayConstruct.cs" />
+    <Compile Include="TestConstructs\TestIntConstruct.cs" />
+    <Compile Include="TestConstructs\TestDoubleConstruct.cs" />
+    <Compile Include="TestByteEnum.cs" />
+    <Compile Include="TestConstructs\TestEnumConstruct.cs" />
+    <Compile Include="TestConstructs\TestNestedConstruct.cs" />
+    <Compile Include="TestConstructs\TestStringConstruct.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Construct.NET\Construct.NET.csproj">

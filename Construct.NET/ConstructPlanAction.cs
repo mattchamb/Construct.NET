@@ -1,27 +1,27 @@
 using System;
 using System.IO;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Construct.NET
 {
-    internal abstract class ConstructPlanAction
+    public abstract class ConstructPlanAction
     {
         public ConstructProperty TargetProperty { get; private set; }
         protected MethodInfo SetterMethod;
         protected MethodInfo GetterMethod;
         
-        public string ConditionalProperty { get; private set; }
-        public Func<object, bool> ConditionalFunction { get; private set; }
+        public MethodInfo ConditionalFunction { get; private set; }
 
         protected ConstructPlanAction(ConstructProperty targetProperty)
         {
             TargetProperty = targetProperty;
             SetterMethod = TargetProperty.Property.GetSetMethod();
             GetterMethod = TargetProperty.Property.GetGetMethod();
-
-            ConditionalProperty = TargetProperty.ConditionArgument;
-            ConditionalFunction = TargetProperty.Condition;
+            if (!string.IsNullOrWhiteSpace(targetProperty.ConditionFunctionName))
+            {
+                ConditionalFunction = GetFunctionByName(targetProperty.Property.DeclaringType, TargetProperty.ConditionFunctionName);
+            }
         }
 
         private Type _targetType;
@@ -35,7 +35,7 @@ namespace Construct.NET
 
         public abstract void Execute(BinaryReader reader, object targetObj);
         public abstract void Output(BinaryWriter writer, object targetObj);
-        protected internal abstract object GetValue(BinaryReader reader);
+        internal abstract object GetValue(BinaryReader reader);
 
         protected void CheckTypes(object targetObj)
         {
@@ -57,8 +57,22 @@ namespace Construct.NET
         {
             get
             {
-                return ConditionalProperty != null && ConditionalFunction != null;
+                return ConditionalFunction != null;
             }
+        }
+
+        private MethodInfo GetFunctionByName(Type declaringType, string functionName)
+        {
+            const BindingFlags bindingFlags = BindingFlags.InvokeMethod;
+            var result =  declaringType.GetMethod(functionName);
+            if (result.ReturnType != typeof(bool) || result.GetParameters().Length > 0)
+                throw new Exception("The function specified by the conditional property must take no arguments and return a bool.");
+            return result;
+        }
+
+        public bool InvokeConditionalFunction(object obj)
+        {
+            return (bool)ConditionalFunction.Invoke(obj, null);
         }
     }
 }

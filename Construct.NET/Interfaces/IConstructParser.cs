@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Construct.NET.Interfaces
+namespace Construct.NET
 {
-    internal interface IConstructParser
+    public interface IConstructParser
     {
         T ParseStream<T>(Stream inputStream, ConstructPlan constructPlan) where T : new();
     }

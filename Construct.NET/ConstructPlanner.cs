@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Construct.NET.Interfaces;
 
 namespace Construct.NET
 {
-    internal class ConstructPlanner : IConstructPlanner
+    public class ConstructPlanner : IConstructPlanner
     {
         private readonly static object SyncRoot = new object();
-        public static Dictionary<Type, ConstructPlan> CachedPlans = new Dictionary<Type, ConstructPlan>();
+        internal static Dictionary<Type, ConstructPlan> CachedPlans = new Dictionary<Type, ConstructPlan>();
 
         private Dictionary<Type, List<Type>> _mappings;
         private Dictionary<Type, List<Type>> TypeActionMappings
@@ -75,30 +75,18 @@ namespace Construct.NET
         }
 
         /// <summary>
-        /// Because a type can have multiple actions, e.g. strings, we need to
+        /// Because I think that a type might have multiple actions we need to
         /// resolve the intended type based on the fields set in the attribute.
         /// </summary>
         /// <param name="actionGroup"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        private Type ResolveAction(IEnumerable<Type> actionGroup, ConstructProperty property)
+        private Type ResolveAction(List<Type> actionGroup, ConstructProperty property)
         {
-            if(property.Property.PropertyType == typeof(string))
-            {
-                return ChooseStringType(property);
-            }
-            //currently only strings have multiple handlers
-            //  so these groups will only have one element.
-            return actionGroup.First();
-        }
-
-        private Type ChooseStringType(ConstructProperty property)
-        {
-            if(property.StringLength > 0)
-            {
-                return typeof (FixedLengthStringAction);
-            }
-            return typeof (AsciiStringAction);
+            //Currently no multiple actions, so just return the first one.
+            Debug.Assert(actionGroup.Count == 1, "actionGroup.Count == 1",
+                         "A type has multiple actions. This function needs to be extended to handle that.");
+            return actionGroup[0];
         }
 
         private ConstructPlanAction CreatePlanAction(Type actionType, ConstructProperty targetProperty)

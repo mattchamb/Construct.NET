@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Construct.NET
 {
     [ConstructTarget(typeof(NestedAction))]
-    internal class NestedAction : ConstructPlanAction
+    public class NestedAction : ConstructPlanAction
     {
         public NestedAction(ConstructProperty targetProperty)
             : base(targetProperty)
@@ -21,8 +21,8 @@ namespace Construct.NET
 
         public override void Output(BinaryWriter writer, object targetObj)
         {
-            //This is bad, shouldn't depend on a concrete type.
-            var planner = new ConstructPlanner();
+            //This is bad, shouldn't depend on the static Construct.
+            var planner = Construct.Planner;
             var nestedTypePlan = planner.CreateConstructPlan(TargetProperty.Property.PropertyType);
             var obj = GetterMethod.Invoke(targetObj, null);
             foreach (var planAction in nestedTypePlan.PlanActions)
@@ -31,7 +31,7 @@ namespace Construct.NET
             }
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             //This is bad, shouldn't depend on the static Construct.
             var planner = Construct.Planner;

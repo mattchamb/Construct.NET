@@ -2,7 +2,7 @@
 
 namespace Construct.NET
 {
-    internal class ConstructPlan
+    public class ConstructPlan
     {
         public ConstructPlan()
         {

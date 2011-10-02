@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Construct.NET
 {
     [ConstructTarget(typeof(Int16))]
-    internal class Int16Action : ConstructPlanAction
+    public class Int16Action : ConstructPlanAction
     {
         public Int16Action(ConstructProperty targetProperty)
             : base(targetProperty)
@@ -27,7 +27,7 @@ namespace Construct.NET
             writer.Write(value);
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             return reader.ReadInt16();
         }

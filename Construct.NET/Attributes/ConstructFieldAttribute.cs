@@ -24,14 +24,11 @@ namespace Construct.NET
         }
 
         /// <summary>
-        /// The name of the property to pass to the Condition function.
+        /// The name of the condition function.
+        /// It is an instance method of the construct
         /// </summary>
-        public string ConditionArgument { get; set; }
-        /// <summary>
-        /// The function that says whether to include the conditional field to which it is attached.
-        /// Requires the ConditionArgument property to be set.
-        /// </summary>
-        public Func<object, bool> Condition { get; set; }
+        public string ConditionFunction { get; set; }
+
 
         public ConstructFieldAttribute(int serializationOrder)
         {

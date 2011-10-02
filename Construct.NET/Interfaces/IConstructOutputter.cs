@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Construct.NET.Interfaces
+namespace Construct.NET
 {
-    internal interface IConstructOutputter
+    public interface IConstructOutputter
     {
         void Output(object obj, BinaryWriter binWriter, ConstructPlan constructPlan);
     }

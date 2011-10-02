@@ -1,9 +1,8 @@
-using System;
 using System.Reflection;
 
 namespace Construct.NET
 {
-    internal class ConstructProperty
+    public class ConstructProperty
     {
         public int SerializationOrder { get; private set; }
         public PropertyInfo Property { get; private set; }
@@ -15,14 +14,9 @@ namespace Construct.NET
         public int StringLength { get; set; }
 
         /// <summary>
-        /// The name of the property to pass to the Condition function.
-        /// </summary>
-        public string ConditionArgument { get; set; }
-        /// <summary>
         /// The function that says whether to include the conditional field to which it is attached.
-        /// Requires the ConditionArgument property to be set.
         /// </summary>
-        public Func<object, bool> Condition { get; set; }
+        public string ConditionFunctionName { get; set; }
 
         public bool IsArray
         {
@@ -46,9 +40,7 @@ namespace Construct.NET
             SerializationOrder = constructAttribute.SerializationOrder;
             Nesting = constructAttribute.Nesting;
             StringLength = constructAttribute.StringLength;
-            ConditionArgument = constructAttribute.ConditionArgument;
-            Condition = constructAttribute.Condition;
+            ConditionFunctionName = constructAttribute.ConditionFunction;
         }
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Construct.NET.Interfaces;
+﻿using System.IO;
 
 namespace Construct.NET
 {

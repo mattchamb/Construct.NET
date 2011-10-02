@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Construct.NET
 {
     [ConstructTarget(typeof(Array))]
-    internal class ArrayAction : ConstructPlanAction
+    public class ArrayAction : ConstructPlanAction
     {
         public ArrayAction(PropertyInfo lengthProperty, ConstructProperty targetProperty)
             : base(targetProperty)
@@ -26,7 +26,8 @@ namespace Construct.NET
         {
             //CheckTypes(targetObj);
             var arrayLength = (int)_arrayLengthProperty.GetGetMethod().Invoke(targetObj, null);
-            var planner = new ConstructPlanner();
+            //this is bad...
+            var planner = Construct.Planner;
             var arrayElementType = TargetProperty.Property.PropertyType.GetElementType();
             Array array = Array.CreateInstance(arrayElementType, arrayLength);
             if(arrayElementType.IsConstruct())
@@ -69,7 +70,7 @@ namespace Construct.NET
             
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             // This wont really work for an array, it needs more info (like the length and type)
             // and i want to be able to call this separately to Execute, and the info

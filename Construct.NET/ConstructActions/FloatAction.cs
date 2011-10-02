@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Construct.NET
 {
     [ConstructTarget(typeof(float))]
-    internal class FloatAction : ConstructPlanAction
+    public class FloatAction : ConstructPlanAction
     {
         public FloatAction(ConstructProperty targetProperty)
             : base(targetProperty)
@@ -28,7 +28,7 @@ namespace Construct.NET
             writer.Write(value);
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             return reader.ReadSingle();
         }

@@ -6,9 +6,8 @@ using NUnit.Framework;
 namespace Construct.NET.Tests
 {
     [TestFixture]
-    class BasicTests
+    class ParserTests
     {
-        
         [Test]
         public void IntTest()
         {
@@ -93,12 +92,7 @@ namespace Construct.NET.Tests
                               First = 255,
                               Second = -1
                           };
-
-            var outStream = Construct.Output(obj);
-            outStream.Seek(0, SeekOrigin.Begin);
-            var outData = new byte[8];
-            outStream.Read(outData, 0, outData.Length);
-
+            var outData =  Construct.Output(obj);
             Assert.IsTrue(expectedData.SequenceEqual(outData));
         }
 
@@ -112,18 +106,15 @@ namespace Construct.NET.Tests
                               Value = "test"
                           };
 
-            var outStream = Construct.Output(obj);
-            outStream.Seek(0, SeekOrigin.Begin);
-            var outData = new byte[5];
-            outStream.Read(outData, 0, outData.Length);
-
+            
+            var outData = Construct.Output(obj);
+            
             Assert.IsTrue(expectedData.SequenceEqual(outData));
         }
 
         [Test]
         public void ArrayTest()
         {
-            byte[] data = { 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x4, 0x00, 0x00, 0x00 };
             using (var memStream = new MemoryStream())
             {
                 var writer = new BinaryWriter(memStream, Encoding.ASCII);
@@ -149,12 +140,44 @@ namespace Construct.NET.Tests
             using (var memStream = new MemoryStream())
             {
                 var writer = new BinaryWriter(memStream, Encoding.ASCII);
-                writer.Write((int)(TestEnum.Test | TestEnum.Test2));
+                writer.Write((byte)(TestByteEnum.Flag1 | TestByteEnum.Flag2));
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestEnumConstruct>(memStream);
-                Assert.IsTrue(result.Value.HasFlag(TestEnum.Test));
-                Assert.IsTrue(result.Value.HasFlag(TestEnum.Test2));
-                Assert.IsFalse(result.Value.HasFlag(TestEnum.Test3));
+                Assert.IsTrue(result.Value.HasFlag(TestByteEnum.Flag1));
+                Assert.IsTrue(result.Value.HasFlag(TestByteEnum.Flag2));
+                Assert.IsFalse(result.Value.HasFlag(TestByteEnum.Flag3));
+            }
+        }
+
+        [Construct]
+        class ConditionalConstruct
+        {
+            [ConstructField(1)]
+            public int Prop { get; set; }
+            [ConstructField(2, ConditionFunction = "ConditionFunction")]
+            public int SomeInt { get; set; }
+
+            public bool ConditionFunction()
+            {
+                return true;
+            }
+        }
+
+        [Test]
+        public void TestParseConditionalConstruct()
+        {
+            using (var memStream = new MemoryStream())
+            {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(255);
+                writer.Write(255);
+                memStream.Seek(0, SeekOrigin.Begin);
+                var result = Construct.Parse<ConditionalConstruct>(memStream);
+
+                const int expectedValue = 255;
+
+                Assert.AreEqual(expectedValue, result.Prop);
+                Assert.AreEqual(expectedValue, result.SomeInt);
             }
         }
 

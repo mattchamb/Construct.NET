@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Construct.NET
 {
     [ConstructTarget(typeof(Enum))]
-    internal class EnumAction : ConstructPlanAction
+    public class EnumAction : ConstructPlanAction
     {
         public EnumAction(ConstructProperty targetProperty)
             : base(targetProperty)
@@ -45,7 +45,7 @@ namespace Construct.NET
             throw new NotImplementedException();
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             throw new NotImplementedException();
         }

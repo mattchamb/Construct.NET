@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Construct.NET.Interfaces;
 
 namespace Construct.NET
 {
@@ -21,16 +20,17 @@ namespace Construct.NET
             return Parser.ParseStream<T>(inputStream, CreatePlan<T>());
         }
 
-        public static Stream Output<T>(T obj)
+        public static byte[] Output<T>(T obj)
         {
-            return Output(obj, new MemoryStream());
-        }
-
-        public static Stream Output<T>(T obj, Stream dest)
-        {
-            var binWriter = new BinaryWriter(dest);
-            Outputter.Output(obj, binWriter, CreatePlan<T>());
-            return dest;
+            using (var destStream = new MemoryStream())
+            {
+                var binWriter = new BinaryWriter(destStream);
+                Outputter.Output(obj, binWriter, CreatePlan<T>());
+                destStream.Seek(0, SeekOrigin.Begin);
+                var result = new byte[destStream.Length];
+                destStream.Read(result, 0, result.Length);
+                return result;
+            }
         }
 
         private static ConstructPlan CreatePlan<T>()

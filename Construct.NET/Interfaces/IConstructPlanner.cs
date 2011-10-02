@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Construct.NET.Interfaces
+namespace Construct.NET
 {
-    internal interface IConstructPlanner
+    public interface IConstructPlanner
     {
         ConstructPlan CreateConstructPlan<T>();
         ConstructPlan CreateConstructPlan(Type type);

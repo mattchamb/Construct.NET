@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 
 namespace Construct.NET
 {
     [ConstructTarget(typeof(string))]
-    internal class AsciiStringAction : ConstructPlanAction
+    public class AsciiStringAction : ConstructPlanAction
     {
         public AsciiStringAction(ConstructProperty targetProperty)
             : base(targetProperty)
@@ -33,7 +30,7 @@ namespace Construct.NET
             writer.Write((byte)0);
         }
 
-        protected internal override object GetValue(BinaryReader reader)
+        internal override object GetValue(BinaryReader reader)
         {
             List<byte> characters;
             int stringLength = TargetProperty.StringLength;

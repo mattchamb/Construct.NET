@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Construct.NET
 {
-    internal static class ReflectionHelper
+    public static class ReflectionHelper
     {
         public static bool IsConstruct(this Type type)
         {

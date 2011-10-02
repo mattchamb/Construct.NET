@@ -1,10 +1,9 @@
 ﻿using System.Text;
 using System.IO;
-using Construct.NET.Interfaces;
 
 namespace Construct.NET
 {
-    internal class ConstructParser : IConstructParser
+    public class ConstructParser : IConstructParser
     {
         public T ParseStream<T>(Stream inputStream, ConstructPlan constructPlan) where T : new()
         {
@@ -14,7 +13,7 @@ namespace Construct.NET
             {
                 if (planAction.IsConditionalAction)
                 {
-                    if (planAction.ConditionalFunction(obj.GetFieldByName(planAction.ConditionalProperty)))
+                    if (planAction.InvokeConditionalFunction(obj))
                     {
                         planAction.Execute(binReader, obj);
                     }
