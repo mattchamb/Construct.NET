@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -10,14 +11,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(string))]
     internal class AsciiStringAction : ConstructPlanAction
     {
-        public AsciiStringAction(PropertyInfo targetProperty)
+        public AsciiStringAction(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(string); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)
@@ -39,13 +35,33 @@ namespace Construct.NET
 
         protected internal override object GetValue(BinaryReader reader)
         {
-            var characters = new List<byte>();
-            byte read;
-            while (reader.BaseStream.CanRead && (read = reader.ReadByte()) != 0)
+            List<byte> characters;
+            int stringLength = TargetProperty.StringLength;
+            if(stringLength > 0)
             {
-                characters.Add(read);
+                characters = ReadFixedLengthString(stringLength, reader);
+            }
+            else
+            {
+                characters = ReadNullTerminatedString(reader);
             }
             return Encoding.ASCII.GetString(characters.ToArray());
+        }
+
+        private List<byte> ReadNullTerminatedString(BinaryReader reader)
+        {
+            var result = new List<byte>();
+            byte read;
+            while((read = reader.ReadByte()) != 0)
+            {
+                result.Add(read);
+            }
+            return result;
+        }
+
+        private List<byte> ReadFixedLengthString(int stringLength, BinaryReader reader)
+        {
+            return new List<byte>(reader.ReadBytes(stringLength));
         }
     }
 }

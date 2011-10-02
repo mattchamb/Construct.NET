@@ -8,14 +8,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(float))]
     internal class FloatAction : ConstructPlanAction
     {
-        public FloatAction(PropertyInfo targetProperty)
+        public FloatAction(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(float); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)

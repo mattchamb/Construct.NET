@@ -9,37 +9,32 @@ namespace Construct.NET
     [ConstructTarget(typeof(Enum))]
     internal class EnumAction : ConstructPlanAction
     {
-        public EnumAction(PropertyInfo targetProperty)
+        public EnumAction(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(Enum); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)
         {
             //CheckTypes(targetObj);
-            var enumBaseType = TargetProperty.PropertyType.GetEnumUnderlyingType();
+            var enumBaseType = TargetProperty.Property.PropertyType.GetEnumUnderlyingType();
             var actions = ReflectionHelper.GetTypeActionMappings();
             if(!actions.ContainsKey(enumBaseType))
             {
                 throw new Exception(
                     string.Format("The enum {0} of base type {1} does not have a handler mapped for the base type.",
-                                  TargetProperty.PropertyType, enumBaseType));
+                                  TargetProperty.Property.PropertyType, enumBaseType));
             }
             var action = actions[enumBaseType];
             var planAction = (ConstructPlanAction)Activator.CreateInstance(action.First(), new object[] { TargetProperty }); // we don't need a TargetProperty.... hmmmm
             var result = planAction.GetValue(reader);
 
-            bool isFlags = TargetProperty.PropertyType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+            bool isFlags = TargetProperty.Property.PropertyType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
 
-            if (!isFlags && !TargetProperty.PropertyType.IsEnumDefined(result))
+            if (!isFlags && !TargetProperty.Property.PropertyType.IsEnumDefined(result))
             {
                 throw new Exception(string.Format("The enum {0} is not defined for the value {1}",
-                                                  TargetProperty.PropertyType, result));
+                                                  TargetProperty.Property.PropertyType, result));
             }
             SetterMethod.Invoke(targetObj, new[] { result });
         }

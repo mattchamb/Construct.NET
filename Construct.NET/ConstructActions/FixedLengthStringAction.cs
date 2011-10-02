@@ -10,13 +10,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(string))]
     internal class FixedLengthStringAction : ConstructPlanAction
     {
-        public FixedLengthStringAction(PropertyInfo targetProperty) : base(targetProperty)
+        public FixedLengthStringAction(ConstructProperty targetProperty)
+            : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof (string); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)
@@ -39,22 +35,13 @@ namespace Construct.NET
         protected internal override object GetValue(BinaryReader reader)
         {
             var characters = new List<byte>();
-            int stringLength = GetStringLength(TargetProperty);
+            int stringLength = TargetProperty.StringLength;
             byte read;
-            while (reader.BaseStream.CanRead && (read = reader.ReadByte()) != 0 && characters.Count < stringLength)
+            while ((read = reader.ReadByte()) != 0 && characters.Count < stringLength)
             {
                 characters.Add(read);
             }
             return Encoding.ASCII.GetString(characters.ToArray());
-        }
-
-        private int GetStringLength(PropertyInfo property)
-        {
-            var constructField =
-                property.GetCustomAttributes(typeof (ConstructFieldAttribute), false)
-                        .Cast<ConstructFieldAttribute>()
-                        .First();
-            return constructField.StringLength;
         }
     }
 }

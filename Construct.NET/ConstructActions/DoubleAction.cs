@@ -8,14 +8,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(double))]
     internal class DoubleAction : ConstructPlanAction
     {
-        public DoubleAction(PropertyInfo targetProperty)
+        public DoubleAction(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(double); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)

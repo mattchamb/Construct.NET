@@ -8,14 +8,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(byte))]
     internal class ByteAction : ConstructPlanAction
     {
-        public ByteAction(PropertyInfo targetProperty) 
+        public ByteAction(ConstructProperty targetProperty) 
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(byte); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)

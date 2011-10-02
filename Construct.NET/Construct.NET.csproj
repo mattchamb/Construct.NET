@@ -46,6 +46,7 @@
     <Compile Include="Attributes\ConstructFieldAttribute.cs" />
     <Compile Include="Attributes\ConstructTargetAttribute.cs" />
     <Compile Include="ConstructActions\FixedLengthStringAction.cs" />
+    <Compile Include="ConstructProperty.cs" />
     <Compile Include="NestingType.cs" />
     <Compile Include="ConstructActions\ByteAction.cs" />
     <Compile Include="ConstructActions\CharAction.cs" />

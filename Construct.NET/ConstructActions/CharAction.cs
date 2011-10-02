@@ -8,14 +8,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(char))]
     internal class CharAction : ConstructPlanAction
     {
-        public CharAction(PropertyInfo targetProperty)
+        public CharAction(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(char); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)

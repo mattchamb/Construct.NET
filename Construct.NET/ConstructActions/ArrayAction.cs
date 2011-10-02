@@ -9,10 +9,11 @@ namespace Construct.NET
     [ConstructTarget(typeof(Array))]
     internal class ArrayAction : ConstructPlanAction
     {
-        public ArrayAction(PropertyInfo lengthProperty, PropertyInfo targetProperty)
+        public ArrayAction(PropertyInfo lengthProperty, ConstructProperty targetProperty)
             : base(targetProperty)
         {
-            if (!(targetProperty.GetSerializationOrder() > lengthProperty.GetSerializationOrder()))
+            var lengthAttribute = lengthProperty.GetConstructFieldAttribute();
+            if (!(targetProperty.SerializationOrder > lengthAttribute.SerializationOrder))
             {
                 throw new Exception("Cannot deserialize an array without knowing its length - it must use a property assigned before the array.");
             }
@@ -21,17 +22,12 @@ namespace Construct.NET
 
         private readonly PropertyInfo _arrayLengthProperty;
 
-        public override Type TargetType
-        {
-            get { return typeof(Array); }
-        }
-
         public override void Execute(BinaryReader reader, object targetObj)
         {
             //CheckTypes(targetObj);
             var arrayLength = (int)_arrayLengthProperty.GetGetMethod().Invoke(targetObj, null);
             var planner = new ConstructPlanner();
-            var arrayElementType = TargetProperty.PropertyType.GetElementType();
+            var arrayElementType = TargetProperty.Property.PropertyType.GetElementType();
             Array array = Array.CreateInstance(arrayElementType, arrayLength);
             if(arrayElementType.IsConstruct())
             {
@@ -54,7 +50,7 @@ namespace Construct.NET
                 {
                     throw new Exception(
                         string.Format("The enum {0} of base type {1} does not have a handler mapped for the base type.",
-                                      TargetProperty.PropertyType, arrayElementType));
+                                      TargetProperty.Property.PropertyType, arrayElementType));
                 }
                 var action = actions[arrayElementType];
                 for (int i = 0; i < arrayLength; i++)

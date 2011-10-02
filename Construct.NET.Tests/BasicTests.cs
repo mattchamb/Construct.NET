@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 
 namespace Construct.NET.Tests
@@ -11,9 +12,11 @@ namespace Construct.NET.Tests
         [Test]
         public void IntTest()
         {
-            byte[] data = {0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff};
-            using (var memStream = new MemoryStream(data))
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(255);
+                writer.Write(-1);
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestIntConstruct>(memStream);
 
@@ -28,10 +31,11 @@ namespace Construct.NET.Tests
         [Test]
         public void DoubleTest()
         {
-            byte[] data = { 0x40, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            data = data.Reverse().ToArray(); //converting it to the correct endian
-            using (var memStream = new MemoryStream(data))
+            
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(3.5d);
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestDoubleConstruct>(memStream);
 
@@ -44,9 +48,11 @@ namespace Construct.NET.Tests
         [Test]
         public void StringTest()
         {
-            byte[] data = { (byte)'t', (byte)'e', (byte)'s', (byte)'t', 0 };
-            using (var memStream = new MemoryStream(data))
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(Encoding.ASCII.GetBytes("test"));
+                writer.Write((byte)0);
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestStringConstruct>(memStream);
 
@@ -59,9 +65,12 @@ namespace Construct.NET.Tests
         [Test]
         public void NestedTest()
         {
-            byte[] data = { 0xff, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00 };
-            using (var memStream = new MemoryStream(data))
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(255);
+                writer.Write(255);
+                writer.Write(255);
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestNestedConstruct>(memStream);
 
@@ -85,7 +94,7 @@ namespace Construct.NET.Tests
                               Second = -1
                           };
 
-            var outStream = Construct.Output<TestIntConstruct>(obj);
+            var outStream = Construct.Output(obj);
             outStream.Seek(0, SeekOrigin.Begin);
             var outData = new byte[8];
             outStream.Read(outData, 0, outData.Length);
@@ -103,7 +112,7 @@ namespace Construct.NET.Tests
                               Value = "test"
                           };
 
-            var outStream = Construct.Output<TestStringConstruct>(obj);
+            var outStream = Construct.Output(obj);
             outStream.Seek(0, SeekOrigin.Begin);
             var outData = new byte[5];
             outStream.Read(outData, 0, outData.Length);
@@ -115,8 +124,14 @@ namespace Construct.NET.Tests
         public void ArrayTest()
         {
             byte[] data = { 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x4, 0x00, 0x00, 0x00 };
-            using (var memStream = new MemoryStream(data))
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write(2);
+                writer.Write(1);
+                writer.Write(2);
+                writer.Write(3);
+                writer.Write(4);
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestArrayConstruct>(memStream);
 
@@ -131,13 +146,12 @@ namespace Construct.NET.Tests
         [Test]
         public void EnumTest()
         {
-            byte[] data = { 0x03, 0x00, 0x00, 0x00 };
-            using (var memStream = new MemoryStream(data))
+            using (var memStream = new MemoryStream())
             {
+                var writer = new BinaryWriter(memStream, Encoding.ASCII);
+                writer.Write((int)(TestEnum.Test | TestEnum.Test2));
                 memStream.Seek(0, SeekOrigin.Begin);
                 var result = Construct.Parse<TestEnumConstruct>(memStream);
-                TestEnum test = TestEnum.Test | TestEnum.Test2;
-                //Assert.AreEqual(TestEnum.Test, result.Value);
                 Assert.IsTrue(result.Value.HasFlag(TestEnum.Test));
                 Assert.IsTrue(result.Value.HasFlag(TestEnum.Test2));
                 Assert.IsFalse(result.Value.HasFlag(TestEnum.Test3));

@@ -7,14 +7,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(Int16))]
     internal class Int16Action : ConstructPlanAction
     {
-        public Int16Action(PropertyInfo targetProperty)
+        public Int16Action(ConstructProperty targetProperty)
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof(Int16); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)

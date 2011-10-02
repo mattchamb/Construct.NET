@@ -8,14 +8,9 @@ namespace Construct.NET
     [ConstructTarget(typeof(Int32))]
     internal class Int32Action : ConstructPlanAction
     {
-        public Int32Action(PropertyInfo targetProperty) 
+        public Int32Action(ConstructProperty targetProperty) 
             : base(targetProperty)
         {
-        }
-
-        public override Type TargetType
-        {
-            get { return typeof (Int32); }
         }
 
         public override void Execute(BinaryReader reader, object targetObj)
