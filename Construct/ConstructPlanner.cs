@@ -16,7 +16,7 @@ namespace Construct
         public ConstructPlan<TConstructable> CreatePlan<TConstructable>() where TConstructable : new()
         {
             var planActions = CreatePlanActionsForType<TConstructable>();
-            return new ConstructPlan<TConstructable>(planActions);
+            return new ConstructPlan<TConstructable>(planActions, this);
         }
 
         private List<PlanAction<TConstructable>> CreatePlanActionsForType<TConstructable>() where TConstructable : new()

@@ -14,8 +14,8 @@ namespace Construct
             InputByteOrder = inputByteOrder;
         }
 
-        public abstract void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream);
+        public abstract void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner);
 
-        public abstract void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream);
+        public abstract void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner);
     }
 }

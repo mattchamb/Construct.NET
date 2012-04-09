@@ -6,7 +6,6 @@ namespace Construct
     public sealed class PrimitiveElementAttribute : Attribute, IConstructElementDescriptor
     {
         public int SerializationOrder { get; private set; }
-        public Type ElementType { get; private set; }
         public ByteOrder DataByteOrder { get; private set; }
 
         /// <remarks>Defaults to using <see cref="ByteOrder.Host"/></remarks>
@@ -21,7 +20,6 @@ namespace Construct
             serializationOrder.Require("serializationOrder", arg => arg >= 0);
 
             SerializationOrder = serializationOrder;
-            ElementType = elementType;
             DataByteOrder = dataByteOrder;
         }
     }

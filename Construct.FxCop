@@ -54,6 +54,28 @@
       <Namespaces>
        <Namespace Name="Construct">
         <Types>
+         <Type Name="ByteOrderer">
+          <Messages>
+           <Message Id="Orderer" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-04-09 00:48:56Z">
+            <Issue Name="Type">
+             <Item>Orderer</Item>
+             <Item>'ByteOrderer'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#IntegerToFloat(System.Int32)">
+            <Messages>
+             <Message Id="float" TypeName="IdentifiersShouldNotContainTypeNames" Category="Microsoft.Naming" CheckId="CA1720" Created="2012-04-09 00:48:56Z">
+              <Issue Name="LanguageSpecificMember">
+               <Item>Float</Item>
+               <Item>'ByteOrderer.IntegerToFloat(int)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
          <Type Name="ConstructPlan`1">
           <Members>
            <Member Name="#.ctor(System.Collections.Generic.IList`1&lt;Construct.PlanAction`1&lt;!0&gt;&gt;)">
@@ -68,6 +90,16 @@
            </Member>
           </Members>
          </Type>
+         <Type Name="NullTerminatedStringElementAttribute">
+          <Messages>
+           <Message TypeName="DefineAccessorsForAttributeArguments" Category="Microsoft.Design" CheckId="CA1019" Created="2012-04-09 05:37:57Z" FixCategory="Breaking">
+            <Issue Name="RemoveSetter">
+             <Item>'NullTerminatedStringElementAttribute.TextEncoding'</Item>
+             <Item>'textEncoding'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
         </Types>
        </Namespace>
       </Namespaces>
@@ -79,8 +111,17 @@
    <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
     <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
    </Rule>
+   <Rule TypeName="DefineAccessorsForAttributeArguments" Category="Microsoft.Design" CheckId="CA1019">
+    <Resolution Name="RemoveSetter">Remove the property setter from {0} or reduce its accessibility because it corresponds to positional argument {1}.</Resolution>
+   </Rule>
    <Rule TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006">
     <Resolution Name="Default">Consider a design where {0} doesn't nest generic type {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotContainTypeNames" Category="Microsoft.Naming" CheckId="CA1720">
+    <Resolution Name="LanguageSpecificMember">Consider replacing the language-specific data type identifier '{0}' in member name {1} with either a language-independent equivalent or a more generic term, such as 'value'.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

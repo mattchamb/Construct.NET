@@ -15,14 +15,14 @@ namespace Construct.Actions
             _readerFunction = new Lazy<Func<TConstructable, float>>(() => LambdaGenerator.CreateReaderFunction<TConstructable, float>(Property));
         }
 
-        public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream)
+        public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             var value = inputStream.ReadSingle(InputByteOrder);
             var assignmentFunction = _assignmentFunction.Value;
             assignmentFunction(obj, value);
         }
 
-        public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream)
+        public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
             var reader = _readerFunction.Value;
             var value = reader(obj);

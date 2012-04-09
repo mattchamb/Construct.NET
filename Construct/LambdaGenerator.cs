@@ -15,7 +15,7 @@ namespace Construct
             var assignmentExpression = Expression.Lambda<Action<TConstruct, TArg>>(
                                             Expression.Assign(Expression.Property(constructParameter, propertyInfo),
                                                          argParameter),
-                                            new[] {constructParameter, argParameter});
+                                            constructParameter, argParameter);
             return assignmentExpression.Compile();
         }
 
@@ -28,7 +28,7 @@ namespace Construct
             var assignmentExpression = Expression.Lambda<Action<TConstruct, TArg>>(
                                             Expression.Assign(Expression.Property(constructParameter, propertyInfo),
                                                          Expression.Convert(argParameter, propertyInfo.PropertyType)),
-                                            new[] { constructParameter, argParameter });
+                                            constructParameter, argParameter);
             return assignmentExpression.Compile();
         }
 
@@ -40,8 +40,35 @@ namespace Construct
 
             var readerExpression = Expression.Lambda<Func<TConstruct, TResult>>(
                                         Expression.MakeMemberAccess(constructParameter, propertyInfo),
-                                        new[] { constructParameter });
+                                        constructParameter);
             return readerExpression.Compile();
         }
+
+        public static Func<PropertyInfo, ByteOrder, object> CreateComplexActionInstantiator(Type complexActionType)
+        {
+            complexActionType.RequireNotNull("complexActionType");
+
+            var propertyInfoType = typeof (PropertyInfo);
+            var byteOrderType = typeof (ByteOrder);
+
+            var actionConstructor = complexActionType.GetConstructor(new[] { propertyInfoType, byteOrderType });
+
+            if(actionConstructor == null)
+            {
+                throw new ArgumentException(
+                    "The class represented by the complexActionType Type does not have the required constructor.",
+                    "complexActionType");
+            }
+
+            var propArg = Expression.Parameter(propertyInfoType, "propArg");
+            var byteOrderArg = Expression.Parameter(byteOrderType, "byteOrderArg");
+
+            var creatorExpression = Expression.Convert(Expression.New(actionConstructor), typeof(object));
+
+            var creatorLambda = Expression.Lambda<Func<PropertyInfo, ByteOrder, object>>(creatorExpression, propArg,
+                                                                                         byteOrderArg);
+            return creatorLambda.Compile();
+        }
+
     }
 }

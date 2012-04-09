@@ -1,4 +1,5 @@
-﻿using Construct.Tests.Constructs;
+﻿using System.IO;
+using Construct.Tests.Constructs;
 using NUnit.Framework;
 
 namespace Construct.Tests
@@ -23,7 +24,7 @@ namespace Construct.Tests
         }
 
         [Test]
-        public void PlanForSingleIntConstructExecutesWithCorrectResult()
+        public void PlanForSingleIntConstructExecutesReadingWithCorrectResult()
         {
             var plan = _constructPlanner.CreatePlan<SingleIntConstruct>();
 
@@ -32,6 +33,23 @@ namespace Construct.Tests
             var result = plan.ReadConstruct(reader);
 
             Assert.AreEqual(555, result.Integer);
+        }
+        
+        [Test]
+        public void PlanForSingleIntConstructExecutesWritingWithCorrectResult()
+        {
+            var plan = _constructPlanner.CreatePlan<SingleIntConstruct>();
+            using(var baseStream = new MemoryStream())
+            {
+                var outStream = new ConstructWriterStream(baseStream);
+                var obj = new SingleIntConstruct()
+                              {
+                                  Integer = 555
+                              };
+
+                plan.WriteConstruct(obj, outStream);
+                Assert.AreEqual(4, outStream.Length);
+            }
         }
     }
 }

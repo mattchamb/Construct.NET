@@ -5,7 +5,6 @@ namespace Construct
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public sealed class ComplexElementAttribute : Attribute, IConstructElementDescriptor
     {
-        public Type ElementType { get; private set; }
         public int SerializationOrder { get; private set; }
         public ByteOrder DataByteOrder { get; set; }
 
@@ -16,7 +15,6 @@ namespace Construct
             serializationOrder.Require("serializationOrder", arg => arg >= 0);
 
             SerializationOrder = serializationOrder;
-            ElementType = elementType;
         }
     }
 }
