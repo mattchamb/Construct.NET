@@ -37,21 +37,21 @@ namespace Construct
         {
             var data = ReadBytes(2);
             var value = BitConverter.ToInt16(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public ushort ReadUInt16(ByteOrder byteOrder)
         {
             var data = ReadBytes(2);
             var value = BitConverter.ToUInt16(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public int ReadInt32(ByteOrder byteOrder)
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToInt32(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public Enum ReadEnum(Type enumType, ByteOrder byteOrder)
@@ -107,89 +107,37 @@ namespace Construct
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToUInt32(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public long ReadInt64(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToInt64(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public ulong ReadUInt64(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToUInt64(data, 0);
-            return ToHostOrder(value, byteOrder);
+            return ByteOrderer.ToHostOrder(value, byteOrder);
         }
 
         public float ReadSingle(ByteOrder byteOrder)
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToInt32(data, 0);
-            value = ToHostOrder(value, byteOrder);
-            return IntegerToFloat(value);
+            value = ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderer.IntegerToFloat(value);
         }
 
         public double ReadDouble(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToInt64(data, 0);
-            value = ToHostOrder(value, byteOrder);
-            return LongToDouble(value);
-        }
-
-        private static uint SignedToUnsignedInteger(int value)
-        {
-            return unchecked ((uint)value);
-        }
-
-        private static int UnsignedToSignedInteger(uint value)
-        {
-            return unchecked((int)value);
-        }
-
-        private static ushort SignedToUnsignedShort(short value)
-        {
-            return unchecked((ushort)value);
-        }
-
-        private static short UnsignedToSignedShort(ushort value)
-        {
-            return unchecked((short)value);
-        }
-
-        private static ulong SignedToUnsignedLong(long value)
-        {
-            return unchecked((ulong)value);
-        }
-
-        private static long UnsignedToSignedLong(ulong value)
-        {
-            return unchecked((long)value);
-        }
-
-        private static int FloatToInteger(float value)
-        {
-            var bytes = BitConverter.GetBytes(value);
-            return BitConverter.ToInt32(bytes, 0);
-        }
-
-        private static float IntegerToFloat(int value)
-        {
-            var bytes = BitConverter.GetBytes(value);
-            return BitConverter.ToSingle(bytes, 0);
-        }
-
-        private static long DoubleToLong(double value)
-        {
-            return BitConverter.DoubleToInt64Bits(value);
-        }
-
-        private static double LongToDouble(long value)
-        {
-            return BitConverter.Int64BitsToDouble(value);
+            value = ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderer.LongToDouble(value);
         }
 
         private byte[] ReadBytes(int count)
@@ -199,7 +147,7 @@ namespace Construct
             int readSoFar = 0;
             while(readSoFar != count)
             {
-                int read = _baseStream.Read(data, readSoFar, count - readSoFar);
+                int read = Read(data, readSoFar, count - readSoFar);
                 readSoFar += read;
                 if(read == 0)
                 {
@@ -207,110 +155,6 @@ namespace Construct
                 }
             }
             return data;
-        }
-
-        protected static int ToHostOrder(int value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return IPAddress.NetworkToHostOrder(value);
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static short ToHostOrder(short value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return IPAddress.NetworkToHostOrder(value);
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static long ToHostOrder(long value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return IPAddress.NetworkToHostOrder(value);
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static uint ToHostOrder(uint value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return SignedToUnsignedInteger(IPAddress.NetworkToHostOrder(UnsignedToSignedInteger(value)));
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static ushort ToHostOrder(ushort value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return SignedToUnsignedShort(IPAddress.NetworkToHostOrder(UnsignedToSignedShort(value)));
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static ulong ToHostOrder(ulong value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return SignedToUnsignedLong(IPAddress.NetworkToHostOrder(UnsignedToSignedLong(value)));
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static float ToHostOrder(float value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return IntegerToFloat(IPAddress.NetworkToHostOrder(FloatToInteger(value)));
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
-        }
-
-        protected static double ToHostOrder(double value, ByteOrder inputByteOrder)
-        {
-            switch (inputByteOrder)
-            {
-                case ByteOrder.Host:
-                    return value;
-                case ByteOrder.Network:
-                    return LongToDouble(IPAddress.NetworkToHostOrder(DoubleToLong(value)));
-                default:
-                    throw new ArgumentOutOfRangeException("inputByteOrder");
-            }
         }
 
         public override void Flush()

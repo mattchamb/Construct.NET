@@ -1,8 +1,8 @@
 namespace Construct
 {
-    public interface IConstructPlanner<TConstructable> 
-        where TConstructable : new()
+    public interface IConstructPlanner
+        
     {
-        ConstructPlan<TConstructable> CreatePlan();
+        ConstructPlan<TConstructable> CreatePlan<TConstructable>() where TConstructable : new();
     }
 }

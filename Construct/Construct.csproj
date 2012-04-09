@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,17 +43,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\BooleanAction.cs" />
+    <Compile Include="Actions\ByteAction.cs" />
     <Compile Include="Actions\ComplexAction.cs" />
+    <Compile Include="Actions\DoubleAction.cs" />
+    <Compile Include="Actions\FloatAction.cs" />
+    <Compile Include="Actions\SByteAction.cs" />
+    <Compile Include="ByteOrderer.cs" />
+    <Compile Include="ITypeActionResolver.cs" />
+    <Compile Include="PropertyConstructDescriptor.cs" />
+    <Compile Include="TooManyDescriptorsException.cs" />
     <Compile Include="ConstructPlanner.cs" />
     <Compile Include="Actions\EnumAction.cs" />
+    <Compile Include="ConstructWriterStream.cs" />
     <Compile Include="IConstructPlanner.cs" />
     <Compile Include="ByteOrder.cs" />
     <Compile Include="Actions\Int16Action.cs" />
     <Compile Include="Actions\Int64Action.cs" />
-    <Compile Include="ComplexConstructElementDescriptor.cs" />
+    <Compile Include="ComplexElementAttribute.cs" />
     <Compile Include="NotEnoughDataException.cs" />
     <Compile Include="ConstructableAttribute.cs" />
-    <Compile Include="ConstructElementDescriptor.cs" />
     <Compile Include="ConstructPlan.cs" />
     <Compile Include="ConstructReaderStream.cs" />
     <Compile Include="Actions\Int32Action.cs" />
@@ -60,7 +70,7 @@
     <Compile Include="Actions\UInt32Action.cs" />
     <Compile Include="LambdaGenerator.cs" />
     <Compile Include="IConstructElementDescriptor.cs" />
-    <Compile Include="PrimitiveConstructElementDescriptor.cs" />
+    <Compile Include="PrimitiveElementAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="Requirements.cs" />

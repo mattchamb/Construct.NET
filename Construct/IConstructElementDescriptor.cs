@@ -6,5 +6,6 @@ namespace Construct
     {
         int SerializationOrder { get; }
         Type ElementType { get; }
+        ByteOrder DataByteOrder { get; }
     }
 }

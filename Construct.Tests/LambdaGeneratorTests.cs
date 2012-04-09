@@ -25,6 +25,17 @@ namespace Construct.Tests
 
             Assert.AreEqual(999, primitiveClass.Integer);
         }
+        [Test]
+        public void ReaderLambdaReadsPrimitivesFromProperty()
+        {
+            var primitiveClass = new PrimitivePropertyClass()
+            {
+                Integer = 123
+            };
+            var propertyInfo = primitiveClass.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<PrimitivePropertyClass, int>(propertyInfo);
+            Assert.AreEqual(123, function(primitiveClass));
+        }
 
         class CompositePropertyClass
         {
@@ -45,6 +56,21 @@ namespace Construct.Tests
 
             Assert.AreEqual(primitiveClass, compoundClass.PropertyClass);
             Assert.AreEqual(123, compoundClass.PropertyClass.Integer);
+        }
+        [Test]
+        public void ReaderLambdaReadsCompoundTypesFromProperty()
+        {
+            var primitiveClass = new PrimitivePropertyClass()
+            {
+                Integer = 123
+            };
+            var compoundClass = new CompositePropertyClass()
+                                    {
+                                        PropertyClass = primitiveClass
+                                    };
+            var propertyInfo = compoundClass.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<CompositePropertyClass, PrimitivePropertyClass>(propertyInfo);
+            Assert.AreEqual(primitiveClass, function(compoundClass));
         }
 
 
@@ -73,6 +99,17 @@ namespace Construct.Tests
 
             Assert.AreEqual(IntegerEnum.ValueTwo, obj.Enum);
         }
+        [Test]
+        public void ReaderLambdaReadsIntEnumFromProperty()
+        {
+            var obj = new IntegerEnumClass()
+            {
+                Enum = IntegerEnum.ValueOne
+            };
+            var propertyInfo = obj.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<IntegerEnumClass, IntegerEnum>(propertyInfo);
+            Assert.AreEqual(obj.Enum, function(obj));
+        }
 
         enum ByteEnum : byte
         {
@@ -98,6 +135,17 @@ namespace Construct.Tests
             function(obj, ByteEnum.ValueTwo);
 
             Assert.AreEqual(ByteEnum.ValueTwo, obj.Enum);
+        }
+        [Test]
+        public void ReaderLambdaReadsByteEnumFromProperty()
+        {
+            var obj = new ByteEnumClass()
+            {
+                Enum = ByteEnum.ValueOne
+            };
+            var propertyInfo = obj.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<ByteEnumClass, ByteEnum>(propertyInfo);
+            Assert.AreEqual(obj.Enum, function(obj));
         }
 
         enum SByteEnum : sbyte
@@ -125,6 +173,17 @@ namespace Construct.Tests
 
             Assert.AreEqual(SByteEnum.ValueTwo, obj.Enum);
         }
+        [Test]
+        public void ReaderLambdaReadsSByteEnumFromProperty()
+        {
+            var obj = new SByteEnumClass()
+            {
+                Enum = SByteEnum.ValueOne
+            };
+            var propertyInfo = obj.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<SByteEnumClass, SByteEnum>(propertyInfo);
+            Assert.AreEqual(obj.Enum, function(obj));
+        }
 
         enum ULongEnum : ulong
         {
@@ -150,6 +209,17 @@ namespace Construct.Tests
             function(obj, ULongEnum.ValueTwo);
 
             Assert.AreEqual(ULongEnum.ValueTwo, obj.Enum);
+        }
+        [Test]
+        public void ReaderLambdaReadsULongEnumFromProperty()
+        {
+            var obj = new ULongEnumClass()
+            {
+                Enum = ULongEnum.ValueOne
+            };
+            var propertyInfo = obj.GetType().GetProperties().Single();
+            var function = LambdaGenerator.CreateReaderFunction<ULongEnumClass, ULongEnum>(propertyInfo);
+            Assert.AreEqual(obj.Enum, function(obj));
         }
     }
 }

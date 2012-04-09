@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace Construct
 {
     public class ConstructPlan<TConstructable> where TConstructable : new()
     {
-        private readonly List<PlanAction<TConstructable>> _planActions;
+        private readonly IList<PlanAction<TConstructable>> _planActions;
 
-        public ConstructPlan(List<PlanAction<TConstructable>> planActions)
+        public ConstructPlan(IList<PlanAction<TConstructable>> planActions)
         {
             planActions.RequireNotNull("planActions");
             typeof(TConstructable).Require("TConstructable", argType => argType.IsConstructable());
@@ -15,13 +14,27 @@ namespace Construct
             _planActions = planActions;
         }
 
-        public TConstructable Parse(ConstructReaderStream inputStream)
+        public int PlanLength { get { return _planActions.Count; } }
+
+        public TConstructable ReadConstruct(ConstructReaderStream inputStream)
         {
             inputStream.RequireNotNull("inputStream");
 
             var construct = new TConstructable();
-            _planActions.ForEach(action => action.ApplyAction(construct, inputStream));
+
+            foreach (var planAction in _planActions)
+            {
+                planAction.ApplyReadAction(construct, inputStream);
+            }
             return construct;
+        }
+
+        public void WriteConstruct(TConstructable construct, ConstructWriterStream constructWriter)
+        {
+            foreach (var planAction in _planActions)
+            {
+                planAction.ApplyWriteAction(construct, constructWriter);
+            }
         }
     }
 }

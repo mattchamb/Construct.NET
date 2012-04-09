@@ -8,7 +8,7 @@ namespace Construct.Tests.Constructs
     [Constructable]
     public class SingleIntConstruct
     {
-        [PrimitiveConstructElementDescriptor(1, typeof(int))]
+        [PrimitiveElement(1, typeof(int))]
         public int Integer { get; set; }
     }
 }
