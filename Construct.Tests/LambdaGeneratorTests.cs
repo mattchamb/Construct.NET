@@ -7,10 +7,18 @@ namespace Construct.Tests
     [TestFixture]
     public class LambdaGeneratorTests
     {
+        private readonly ILambdaGenerator _lambdaGenerator;
+
         class PrimitivePropertyClass
         {
             public int Integer { get; set; } 
         }
+
+        public LambdaGeneratorTests()
+        {
+            _lambdaGenerator = new LambdaGenerator();
+        }
+
         [Test]
         public void AssignmentLambdaAssignsPrimitivesToProperty()
         {
@@ -19,7 +27,7 @@ namespace Construct.Tests
                                          Integer = 123
                                      };
             var propertyInfo = primitiveClass.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunction<PrimitivePropertyClass, int>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunction<PrimitivePropertyClass, int>(propertyInfo);
 
             function(primitiveClass, 999);
 
@@ -33,7 +41,7 @@ namespace Construct.Tests
                 Integer = 123
             };
             var propertyInfo = primitiveClass.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<PrimitivePropertyClass, int>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<PrimitivePropertyClass, int>(propertyInfo);
             Assert.AreEqual(123, function(primitiveClass));
         }
 
@@ -50,7 +58,7 @@ namespace Construct.Tests
                                          Integer = 123
                                      };
             var propertyInfo = compoundClass.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunction<CompositePropertyClass, PrimitivePropertyClass>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunction<CompositePropertyClass, PrimitivePropertyClass>(propertyInfo);
 
             function(compoundClass, primitiveClass);
 
@@ -69,7 +77,7 @@ namespace Construct.Tests
                                         PropertyClass = primitiveClass
                                     };
             var propertyInfo = compoundClass.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<CompositePropertyClass, PrimitivePropertyClass>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<CompositePropertyClass, PrimitivePropertyClass>(propertyInfo);
             Assert.AreEqual(primitiveClass, function(compoundClass));
         }
 
@@ -93,7 +101,7 @@ namespace Construct.Tests
                               Enum = IntegerEnum.ValueOne
                           };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunctionWithCast<IntegerEnumClass, Enum>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunctionWithCast<IntegerEnumClass, Enum>(propertyInfo);
 
             function(obj, IntegerEnum.ValueTwo);
 
@@ -107,7 +115,7 @@ namespace Construct.Tests
                 Enum = IntegerEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<IntegerEnumClass, IntegerEnum>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<IntegerEnumClass, IntegerEnum>(propertyInfo);
             Assert.AreEqual(obj.Enum, function(obj));
         }
 
@@ -130,7 +138,7 @@ namespace Construct.Tests
                 Enum = ByteEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunctionWithCast<ByteEnumClass, Enum>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunctionWithCast<ByteEnumClass, Enum>(propertyInfo);
 
             function(obj, ByteEnum.ValueTwo);
 
@@ -144,7 +152,7 @@ namespace Construct.Tests
                 Enum = ByteEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<ByteEnumClass, ByteEnum>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<ByteEnumClass, ByteEnum>(propertyInfo);
             Assert.AreEqual(obj.Enum, function(obj));
         }
 
@@ -167,7 +175,7 @@ namespace Construct.Tests
                 Enum = SByteEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunctionWithCast<SByteEnumClass, Enum>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunctionWithCast<SByteEnumClass, Enum>(propertyInfo);
 
             function(obj, SByteEnum.ValueTwo);
 
@@ -181,7 +189,7 @@ namespace Construct.Tests
                 Enum = SByteEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<SByteEnumClass, SByteEnum>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<SByteEnumClass, SByteEnum>(propertyInfo);
             Assert.AreEqual(obj.Enum, function(obj));
         }
 
@@ -204,7 +212,7 @@ namespace Construct.Tests
                 Enum = ULongEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateAssignmentFunctionWithCast<ULongEnumClass, Enum>(propertyInfo);
+            var function = _lambdaGenerator.CreateAssignmentFunctionWithCast<ULongEnumClass, Enum>(propertyInfo);
 
             function(obj, ULongEnum.ValueTwo);
 
@@ -218,7 +226,7 @@ namespace Construct.Tests
                 Enum = ULongEnum.ValueOne
             };
             var propertyInfo = obj.GetType().GetProperties().Single();
-            var function = LambdaGenerator.CreateReaderFunction<ULongEnumClass, ULongEnum>(propertyInfo);
+            var function = _lambdaGenerator.CreateReaderFunction<ULongEnumClass, ULongEnum>(propertyInfo);
             Assert.AreEqual(obj.Enum, function(obj));
         }
     }

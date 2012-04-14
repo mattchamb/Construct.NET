@@ -7,16 +7,31 @@ namespace Construct
     public class ConstructPlanner : IConstructPlanner
     {
         private readonly ITypeActionResolver _actionResolver;
+        private readonly Dictionary<Type, object> _planCache;
+
+        public ConstructPlanner() 
+            : this(new DefaultTypeActionResolver(new CachedLambdaGenerator()))
+        {
+        }
 
         public ConstructPlanner(ITypeActionResolver actionResolver)
         {
             _actionResolver = actionResolver;
+            _planCache = new Dictionary<Type, object>();
         }
 
         public ConstructPlan<TConstructable> CreatePlan<TConstructable>() where TConstructable : new()
         {
+            object cachedPlan;
+            if(_planCache.TryGetValue(typeof(TConstructable), out cachedPlan))
+            {
+                return cachedPlan as ConstructPlan<TConstructable>;
+            }
+
             var planActions = CreatePlanActionsForType<TConstructable>();
-            return new ConstructPlan<TConstructable>(planActions, this);
+            var plan = new ConstructPlan<TConstructable>(planActions, this);
+            _planCache.Add(typeof(TConstructable), plan);
+            return plan;
         }
 
         private List<PlanAction<TConstructable>> CreatePlanActionsForType<TConstructable>() where TConstructable : new()

@@ -5,27 +5,27 @@ namespace Construct.Actions
 {
     public class BooleanAction<TConstructable> : PlanAction<TConstructable>
     {
-        private readonly Lazy<Action<TConstructable, bool>> _assignmentFunction;
-        private readonly Lazy<Func<TConstructable, bool>> _readerFunction;
+        private Action<TConstructable, bool> _assignmentFunction;
+        private Func<TConstructable, bool> _readerFunction;
 
-        public BooleanAction(PropertyInfo property, ByteOrder inputByteOrder) 
-            : base(property, inputByteOrder)
+        public BooleanAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator) 
+            : base(property, inputByteOrder, lambdaGenerator)
         {
-            _assignmentFunction = new Lazy<Action<TConstructable, bool>>(() => LambdaGenerator.CreateAssignmentFunction<TConstructable, bool>(Property));
-            _readerFunction = new Lazy<Func<TConstructable, bool>>(() => LambdaGenerator.CreateReaderFunction<TConstructable, bool>(Property));
+            
+            
         }
 
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             bool value = inputStream.ReadBoolean();
-            var assignmentFunction = _assignmentFunction.Value;
-            assignmentFunction(obj, value);
+            _assignmentFunction = LambdaGenerator.CreateAssignmentFunction<TConstructable, bool>(Property);
+            _assignmentFunction(obj, value);
         }
 
         public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
-            var reader = _readerFunction.Value;
-            var value = reader(obj);
+            _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, bool>(Property);
+            var value = _readerFunction(obj);
             outputStream.WriteBoolean(value);
         }
     }

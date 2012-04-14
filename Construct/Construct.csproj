@@ -49,9 +49,12 @@
     <Compile Include="Actions\FloatAction.cs" />
     <Compile Include="Actions\SByteAction.cs" />
     <Compile Include="ByteOrderer.cs" />
+    <Compile Include="CachedLambdaGenerator.cs" />
     <Compile Include="DefaultTypeActionResolver.cs" />
     <Compile Include="FieldBasedStringElementAttribute.cs" />
     <Compile Include="FixedLengthStringElementAttribute.cs" />
+    <Compile Include="FunctionCacheKey.cs" />
+    <Compile Include="ILambdaGenerator.cs" />
     <Compile Include="ITypeActionResolver.cs" />
     <Compile Include="LengthPrefixedStringElementAttribute.cs" />
     <Compile Include="PropertyConstructDescriptor.cs" />

@@ -11,7 +11,7 @@ namespace Construct.Tests
 
         public ConstructPlannerTests()
         {
-            var typeActionResolver = new DefaultTypeActionResolver();
+            var typeActionResolver = new DefaultTypeActionResolver(new LambdaGenerator());
             _constructPlanner = new ConstructPlanner(typeActionResolver);
         }
 

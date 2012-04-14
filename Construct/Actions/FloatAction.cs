@@ -5,27 +5,27 @@ namespace Construct.Actions
 {
     public class FloatAction<TConstructable> : PlanAction<TConstructable>
     {
-        private readonly Lazy<Action<TConstructable, float>> _assignmentFunction;
-        private readonly Lazy<Func<TConstructable, float>> _readerFunction;
+        private readonly Action<TConstructable, float> _assignmentFunction;
+        private readonly Func<TConstructable, float> _readerFunction;
 
-        public FloatAction(PropertyInfo property, ByteOrder inputByteOrder)
-            : base(property, inputByteOrder)
+        public FloatAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, lambdaGenerator)
         {
-            _assignmentFunction = new Lazy<Action<TConstructable, float>>(() => LambdaGenerator.CreateAssignmentFunction<TConstructable, float>(Property));
-            _readerFunction = new Lazy<Func<TConstructable, float>>(() => LambdaGenerator.CreateReaderFunction<TConstructable, float>(Property));
+            _assignmentFunction = LambdaGenerator.CreateAssignmentFunction<TConstructable, float>(Property);
+            _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, float>(Property);
         }
 
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             var value = inputStream.ReadSingle(InputByteOrder);
-            var assignmentFunction = _assignmentFunction.Value;
-            assignmentFunction(obj, value);
+            
+            _assignmentFunction(obj, value);
         }
 
         public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
-            var reader = _readerFunction.Value;
-            var value = reader(obj);
+            
+            var value = _readerFunction(obj);
             outputStream.WriteSingle(value, InputByteOrder);
         }
     }

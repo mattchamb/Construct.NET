@@ -5,27 +5,25 @@ namespace Construct.Actions
 {
     public class UInt16Action<TConstructable> : PlanAction<TConstructable>
     {
-        private readonly Lazy<Action<TConstructable, ushort>> _assignmentFunction;
-        private readonly Lazy<Func<TConstructable, ushort>> _readerFunction;
+        private readonly Action<TConstructable, ushort> _assignmentFunction;
+        private readonly Func<TConstructable, ushort> _readerFunction;
 
-        public UInt16Action(PropertyInfo property, ByteOrder inputByteOrder) 
-            : base(property, inputByteOrder)
+        public UInt16Action(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, lambdaGenerator)
         {
-            _assignmentFunction = new Lazy<Action<TConstructable, UInt16>>(() => LambdaGenerator.CreateAssignmentFunction<TConstructable, UInt16>(Property));
-            _readerFunction = new Lazy<Func<TConstructable, UInt16>>(() => LambdaGenerator.CreateReaderFunction<TConstructable, UInt16>(Property));
+            _assignmentFunction = LambdaGenerator.CreateAssignmentFunction<TConstructable, UInt16>(Property);
+            _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, UInt16>(Property);
         }
 
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             ushort value = inputStream.ReadUInt16(InputByteOrder);
-            var assignmentFunction = _assignmentFunction.Value;
-            assignmentFunction(obj, value);
+            _assignmentFunction(obj, value);
         }
 
         public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
-            var reader = _readerFunction.Value;
-            var value = reader(obj);
+            var value = _readerFunction(obj);
             outputStream.WriteUInt16(value, InputByteOrder);
         }
     }

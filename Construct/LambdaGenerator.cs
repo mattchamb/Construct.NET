@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace Construct
 {
-    public static class LambdaGenerator
+    public class LambdaGenerator : ILambdaGenerator
     {
-        public static Action<TConstruct, TArg> CreateAssignmentFunction<TConstruct, TArg>(PropertyInfo propertyInfo)
+        public Action<TConstruct, TArg> CreateAssignmentFunction<TConstruct, TArg>(PropertyInfo propertyInfo)
         {
             propertyInfo.RequireNotNull("propertyInfo");
             var constructParameter = Expression.Parameter(typeof (TConstruct), "construct");
@@ -19,7 +19,7 @@ namespace Construct
             return assignmentExpression.Compile();
         }
 
-        public static Action<TConstruct, TArg> CreateAssignmentFunctionWithCast<TConstruct, TArg>(PropertyInfo propertyInfo)
+        public Action<TConstruct, TArg> CreateAssignmentFunctionWithCast<TConstruct, TArg>(PropertyInfo propertyInfo)
         {
             propertyInfo.RequireNotNull("propertyInfo");
             var constructParameter = Expression.Parameter(typeof (TConstruct), "construct");
@@ -32,7 +32,7 @@ namespace Construct
             return assignmentExpression.Compile();
         }
 
-        public static Func<TConstruct, TResult> CreateReaderFunction<TConstruct, TResult>(PropertyInfo propertyInfo)
+        public Func<TConstruct, TResult> CreateReaderFunction<TConstruct, TResult>(PropertyInfo propertyInfo)
         {
             propertyInfo.RequireNotNull("propertyInfo");
 
@@ -44,14 +44,15 @@ namespace Construct
             return readerExpression.Compile();
         }
 
-        public static Func<PropertyInfo, ByteOrder, object> CreateComplexActionInstantiator(Type complexActionType)
+        public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiator(Type complexActionType)
         {
             complexActionType.RequireNotNull("complexActionType");
 
             var propertyInfoType = typeof (PropertyInfo);
             var byteOrderType = typeof (ByteOrder);
+            var lambdaGeneratorType = typeof (ILambdaGenerator);
 
-            var actionConstructor = complexActionType.GetConstructor(new[] { propertyInfoType, byteOrderType });
+            var actionConstructor = complexActionType.GetConstructor(new[] { propertyInfoType, byteOrderType, lambdaGeneratorType });
 
             if(actionConstructor == null)
             {
@@ -62,11 +63,11 @@ namespace Construct
 
             var propArg = Expression.Parameter(propertyInfoType, "propArg");
             var byteOrderArg = Expression.Parameter(byteOrderType, "byteOrderArg");
+            var lambdaGeneratorArg = Expression.Parameter(lambdaGeneratorType, "lambdaGeneratorArg");
 
-            var creatorExpression = Expression.Convert(Expression.New(actionConstructor), typeof(object));
+            var creatorExpression = Expression.Convert(Expression.New(actionConstructor, propArg, byteOrderArg, lambdaGeneratorArg), typeof(object));
 
-            var creatorLambda = Expression.Lambda<Func<PropertyInfo, ByteOrder, object>>(creatorExpression, propArg,
-                                                                                         byteOrderArg);
+            var creatorLambda = Expression.Lambda<Func<PropertyInfo, ByteOrder, ILambdaGenerator, object>>(creatorExpression, propArg, byteOrderArg, lambdaGeneratorArg);
             return creatorLambda.Compile();
         }
 

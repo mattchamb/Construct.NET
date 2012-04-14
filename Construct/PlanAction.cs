@@ -4,11 +4,13 @@ namespace Construct
 {
     public abstract class PlanAction<TConstructable>
     {
+        protected readonly ILambdaGenerator LambdaGenerator;
         public PropertyInfo Property { get; private set; }
         public ByteOrder InputByteOrder { get; private set; }
 
-        protected PlanAction(PropertyInfo property, ByteOrder inputByteOrder)
+        protected PlanAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
         {
+            LambdaGenerator = lambdaGenerator;
             property.RequireNotNull("property");
             Property = property;
             InputByteOrder = inputByteOrder;

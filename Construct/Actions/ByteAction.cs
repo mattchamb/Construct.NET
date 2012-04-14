@@ -5,27 +5,25 @@ namespace Construct.Actions
 {
     public class ByteAction<TConstructable> : PlanAction<TConstructable>
     {
-        private readonly Lazy<Action<TConstructable, byte>> _assignmentFunction;
-        private readonly Lazy<Func<TConstructable, byte>> _readerFunction;
+        private readonly Action<TConstructable, byte> _assignmentFunction;
+        private readonly Func<TConstructable, byte> _readerFunction;
 
-        public ByteAction(PropertyInfo property, ByteOrder inputByteOrder)
-            : base(property, inputByteOrder)
+        public ByteAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, lambdaGenerator)
         {
-            _assignmentFunction = new Lazy<Action<TConstructable, byte>>(() => LambdaGenerator.CreateAssignmentFunction<TConstructable, byte>(Property));
-            _readerFunction = new Lazy<Func<TConstructable, byte>>(() => LambdaGenerator.CreateReaderFunction<TConstructable, byte>(Property));
+            _assignmentFunction = LambdaGenerator.CreateAssignmentFunction<TConstructable, byte>(Property);
+            _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, byte>(Property);
         }
 
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             byte value = inputStream.ReadByte();
-            var assignmentFunction = _assignmentFunction.Value;
-            assignmentFunction(obj, value);
+            _assignmentFunction(obj, value);
         }
 
         public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
-            var reader = _readerFunction.Value;
-            var value = reader(obj);
+            var value = _readerFunction(obj);
             outputStream.WriteByte(value);
         }
     }
