@@ -23,7 +23,7 @@ namespace Construct
 
             if(!requirement)
             {
-                Fault.ArgumentInvalid(argName);
+                throw new ArgumentException("The provided argument did not meet the specified requirements.", argName);
             }
         }
     }
