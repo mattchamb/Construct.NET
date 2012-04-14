@@ -16,8 +16,8 @@ namespace Construct
 
         public PrimitiveElementAttribute(int serializationOrder, Type elementType, ByteOrder dataByteOrder)
         {
-            elementType.RequireNotNull("elementType");
-            serializationOrder.Require("serializationOrder", arg => arg >= 0);
+            Require.NotNull(elementType, "elementType");
+            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
 
             SerializationOrder = serializationOrder;
             DataByteOrder = dataByteOrder;

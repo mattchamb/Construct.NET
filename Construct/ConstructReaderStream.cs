@@ -10,8 +10,8 @@ namespace Construct
 
         public ConstructReaderStream(Stream baseStream)
         {
-            baseStream.RequireNotNull("baseStream");
-            baseStream.Require("baseStream", stream => stream.CanRead);
+            Require.NotNull(baseStream, "baseStream");
+            Require.That(baseStream, "baseStream", baseStream.CanRead);
             _baseStream = baseStream;
         }
 
@@ -56,8 +56,8 @@ namespace Construct
 
         public Enum ReadEnum(Type enumType, ByteOrder byteOrder)
         {
-            enumType.RequireNotNull("enumType");
-            enumType.Require("enumType", t => t.IsEnum);
+            Require.NotNull(enumType, "enumType");
+            Require.That(enumType, "enumType", enumType.IsEnum);
 
             var enumBaseType = enumType.GetEnumUnderlyingType();
             if (enumBaseType == typeof(byte))
@@ -142,7 +142,7 @@ namespace Construct
 
         private byte[] ReadBytes(int count)
         {
-            count.Require("count", arg => arg > 0);
+            Require.That(count, "count", count > 0);
             var data = new byte[count];
             int readSoFar = 0;
             while(readSoFar != count)

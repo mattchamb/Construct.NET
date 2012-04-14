@@ -37,7 +37,7 @@ namespace Construct
         private List<PlanAction<TConstructable>> CreatePlanActionsForType<TConstructable>() where TConstructable : new()
         {
             var constructType = typeof (TConstructable);
-            constructType.Require("TConstructable", t => t.IsConstructable());
+            Require.That(constructType, "TConstructable", constructType.IsConstructable());
 
             var constructProperties = constructType.GetProperties();
             var propertyDescriptors = constructProperties.Select(property => property.GetElementDescriptor()).Where(x => x != null);

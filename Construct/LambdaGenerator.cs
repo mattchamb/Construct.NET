@@ -8,7 +8,7 @@ namespace Construct
     {
         public Action<TConstruct, TArg> CreateAssignmentFunction<TConstruct, TArg>(PropertyInfo propertyInfo)
         {
-            propertyInfo.RequireNotNull("propertyInfo");
+            Require.NotNull(propertyInfo, "propertyInfo");
             var constructParameter = Expression.Parameter(typeof (TConstruct), "construct");
             var argParameter = Expression.Parameter(typeof (TArg), "arg");
 
@@ -21,7 +21,7 @@ namespace Construct
 
         public Action<TConstruct, TArg> CreateAssignmentFunctionWithCast<TConstruct, TArg>(PropertyInfo propertyInfo)
         {
-            propertyInfo.RequireNotNull("propertyInfo");
+            Require.NotNull(propertyInfo, "propertyInfo");
             var constructParameter = Expression.Parameter(typeof (TConstruct), "construct");
             var argParameter = Expression.Parameter(typeof(TArg), "arg");
 
@@ -34,7 +34,7 @@ namespace Construct
 
         public Func<TConstruct, TResult> CreateReaderFunction<TConstruct, TResult>(PropertyInfo propertyInfo)
         {
-            propertyInfo.RequireNotNull("propertyInfo");
+            Require.NotNull(propertyInfo, "propertyInfo");
 
             var constructParameter = Expression.Parameter(typeof (TConstruct), "construct");
 
@@ -46,7 +46,7 @@ namespace Construct
 
         public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiator(Type complexActionType)
         {
-            complexActionType.RequireNotNull("complexActionType");
+            Require.NotNull(complexActionType, "complexActionType");
 
             var propertyInfoType = typeof (PropertyInfo);
             var byteOrderType = typeof (ByteOrder);

@@ -10,9 +10,9 @@ namespace Construct
 
         public ComplexElementAttribute(int serializationOrder, Type elementType)
         {
-            elementType.RequireNotNull("elementType");
-            elementType.Require("elementType", t => t.IsConstructable());
-            serializationOrder.Require("serializationOrder", arg => arg >= 0);
+            Require.NotNull(elementType, "elementType");
+            Require.That(elementType, "elementType", elementType.IsConstructable());
+            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
 
             SerializationOrder = serializationOrder;
         }

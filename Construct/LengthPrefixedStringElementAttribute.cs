@@ -18,10 +18,10 @@ namespace Construct
 
         public LengthPrefixedStringElementAttribute(int serializationOrder, Type elementType, Type lengthType, Encoding textEncoding)
         {
-            textEncoding.RequireNotNull("textEncoding");
-            elementType.RequireNotNull("elementType");
-            elementType.Require("elementType", t => t.IsConstructable());
-            serializationOrder.Require("serializationOrder", arg => arg >= 0);
+            Require.NotNull(textEncoding, "textEncoding");
+            Require.NotNull(elementType, "elementType");
+            Require.That(elementType, "elementType", elementType.IsConstructable());
+            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
 
             SerializationOrder = serializationOrder;
             LengthType = lengthType;

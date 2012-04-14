@@ -9,8 +9,8 @@ namespace Construct
 
         public PropertyConstructDescriptor(PropertyInfo property, IConstructElementDescriptor descriptor)
         {
-            property.RequireNotNull("property");
-            descriptor.RequireNotNull("descriptor");
+            Require.NotNull(property, "property");
+            Require.NotNull(descriptor, "descriptor");
 
             Property = property;
             Descriptor = descriptor;

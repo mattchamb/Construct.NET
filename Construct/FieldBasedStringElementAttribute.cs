@@ -18,11 +18,11 @@ namespace Construct
 
         public FieldBasedStringElementAttribute(int serializationOrder, Type elementType, string propertyName, Encoding textEncoding)
         {
-            textEncoding.RequireNotNull("textEncoding");
-            elementType.RequireNotNull("elementType");
-            elementType.Require("elementType", t => t.IsConstructable());
-            serializationOrder.Require("serializationOrder", arg => arg >= 0);
-            propertyName.RequireNotNull("propertyName");
+            Require.NotNull(textEncoding, "textEncoding");
+            Require.NotNull(elementType, "elementType");
+            Require.That(elementType, "elementType", elementType.IsConstructable());
+            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
+            Require.NotNull(propertyName, "propertyName");
 
             SerializationOrder = serializationOrder;
             PropertyName = propertyName;

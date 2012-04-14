@@ -9,9 +9,9 @@ namespace Construct
 
         public ConstructPlan(IList<PlanAction<TConstructable>> planActions, IConstructPlanner constructPlanner)
         {
-            planActions.RequireNotNull("planActions");
-            constructPlanner.RequireNotNull("constructPlanner");
-            typeof(TConstructable).Require("TConstructable", argType => argType.IsConstructable());
+            Require.NotNull(planActions, "planActions");
+            Require.NotNull(constructPlanner, "constructPlanner");
+            Require.That(typeof(TConstructable), "TConstructable", typeof(TConstructable).IsConstructable());
 
             _planActions = planActions;
             _constructPlanner = constructPlanner;
@@ -21,7 +21,7 @@ namespace Construct
 
         public TConstructable ReadConstruct(ConstructReaderStream inputStream)
         {
-            inputStream.RequireNotNull("inputStream");
+            Require.NotNull(inputStream, "inputStream");
 
             var construct = new TConstructable();
 

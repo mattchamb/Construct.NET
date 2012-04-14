@@ -18,11 +18,11 @@ namespace Construct
 
         public FixedLengthStringElementAttribute(int serializationOrder, Type elementType, int length, Encoding textEncoding)
         {
-            textEncoding.RequireNotNull("textEncoding");
-            elementType.RequireNotNull("elementType");
-            elementType.Require("elementType", t => t.IsConstructable());
-            serializationOrder.Require("serializationOrder", arg => arg >= 0);
-            length.Require("length", len => len >= 0);
+            Require.NotNull(textEncoding, "textEncoding");
+            Require.NotNull(elementType, "elementType");
+            Require.That(elementType, "elementType", elementType.IsConstructable());
+            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
+            Require.That(length, "length", length >= 0);
 
             SerializationOrder = serializationOrder;
             Length = length;

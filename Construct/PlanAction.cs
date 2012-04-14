@@ -11,7 +11,7 @@ namespace Construct
         protected PlanAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
         {
             LambdaGenerator = lambdaGenerator;
-            property.RequireNotNull("property");
+            Require.NotNull(property, "property");
             Property = property;
             InputByteOrder = inputByteOrder;
         }

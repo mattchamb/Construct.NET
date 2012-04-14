@@ -10,8 +10,8 @@ namespace Construct
 
         public ConstructWriterStream(Stream baseStream)
         {
-            baseStream.RequireNotNull("baseStream");
-            baseStream.Require("baseStream", stream => stream.CanWrite);
+            Require.NotNull(baseStream, "baseStream");
+            Require.That(baseStream, "baseStream", baseStream.CanWrite);
             _baseStream = baseStream;
         }
 
@@ -132,7 +132,7 @@ namespace Construct
         public void WriteEnum(Enum value, ByteOrder byteOrder)
         {
             var enumType = value.GetType();
-            value.Require("value", arg => enumType.IsEnum);
+            Require.That(value, "value", enumType.IsEnum);
             var enumBaseType = Enum.GetUnderlyingType(enumType);
             
             if (enumBaseType == typeof(byte))
