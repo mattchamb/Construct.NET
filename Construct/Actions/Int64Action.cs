@@ -18,7 +18,6 @@ namespace Construct.Actions
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             long value = inputStream.ReadInt64(InputByteOrder);
-            
             _assignmentFunction(obj, value);
         }
 

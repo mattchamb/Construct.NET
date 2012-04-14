@@ -18,7 +18,6 @@ namespace Construct.Actions
         public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             sbyte value = inputStream.ReadSByte();
-            
             _assignmentFunction(obj, value);
         }
 
