@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Construct.Tests
 {
     /// <summary>
-    /// These tests check that my <see cref="ByteOrderer"/> does infact swap byte orders depending on the architecture of the system.
+    /// These tests check that my <see cref="ByteOrderConverter"/> does infact swap byte orders depending on the architecture of the system.
     /// </summary>
     [TestFixture]
     public class ByteOrdererTests
@@ -28,7 +28,7 @@ namespace Construct.Tests
         {
             var data = new[] { b1, b2 };
             var value = BitConverter.ToInt16(data, 0);
-            var result = ByteOrderer.ToHostOrder(value, ByteOrder.Host);
+            var result = ByteOrderConverter.ToHostOrder(value, ByteOrder.Host);
             Assert.AreEqual(value, result);
         }
 
@@ -44,7 +44,7 @@ namespace Construct.Tests
             byte[] expected = _hostIsNetworkByteOrder ? data : new [] { b2, b1 };
 
             var value = BitConverter.ToInt16(data, 0);
-            var convertedValue = ByteOrderer.ToHostOrder(value, ByteOrder.Network);
+            var convertedValue = ByteOrderConverter.ToHostOrder(value, ByteOrder.Network);
             var result = BitConverter.GetBytes(convertedValue);
 
             Assert.AreEqual(expected, result);
@@ -60,7 +60,7 @@ namespace Construct.Tests
         {
             var data = new[] { b1, b2 };
             var value = BitConverter.ToUInt16(data, 0);
-            var result = ByteOrderer.ToHostOrder(value, ByteOrder.Host);
+            var result = ByteOrderConverter.ToHostOrder(value, ByteOrder.Host);
             Assert.AreEqual(value, result);
         }
 
@@ -76,7 +76,7 @@ namespace Construct.Tests
             byte[] expected = _hostIsNetworkByteOrder ? data : new [] { b2, b1 };
 
             var value = BitConverter.ToUInt16(data, 0);
-            var convertedValue = ByteOrderer.ToHostOrder(value, ByteOrder.Network);
+            var convertedValue = ByteOrderConverter.ToHostOrder(value, ByteOrder.Network);
             var result = BitConverter.GetBytes(convertedValue);
 
             Assert.AreEqual(expected, result);
@@ -92,7 +92,7 @@ namespace Construct.Tests
         {
             var data = new[] { b1, b2, b3, b4 };
             var value = BitConverter.ToInt32(data, 0);
-            var result = ByteOrderer.ToHostOrder(value, ByteOrder.Host);
+            var result = ByteOrderConverter.ToHostOrder(value, ByteOrder.Host);
             Assert.AreEqual(value, result);
         }
 
@@ -108,7 +108,7 @@ namespace Construct.Tests
             byte[] expected = _hostIsNetworkByteOrder ? data : new [] { b4, b3, b2, b1 };
 
             var value = BitConverter.ToInt32(data, 0);
-            var convertedValue = ByteOrderer.ToHostOrder(value, ByteOrder.Network);
+            var convertedValue = ByteOrderConverter.ToHostOrder(value, ByteOrder.Network);
             var result = BitConverter.GetBytes(convertedValue);
 
             Assert.AreEqual(expected, result);
@@ -124,7 +124,7 @@ namespace Construct.Tests
         {
             var data = new[] { b1, b2, b3, b4 };
             var value = BitConverter.ToSingle(data, 0);
-            var result = ByteOrderer.ToHostOrder(value, ByteOrder.Host);
+            var result = ByteOrderConverter.ToHostOrder(value, ByteOrder.Host);
             Assert.AreEqual(value, result);
         }
 
@@ -140,7 +140,7 @@ namespace Construct.Tests
             byte[] expected = _hostIsNetworkByteOrder ? data : new[] { b4, b3, b2, b1 };
 
             var value = BitConverter.ToSingle(data, 0);
-            var convertedValue = ByteOrderer.ToHostOrder(value, ByteOrder.Network);
+            var convertedValue = ByteOrderConverter.ToHostOrder(value, ByteOrder.Network);
             var result = BitConverter.GetBytes(convertedValue);
 
             Assert.AreEqual(expected, result);

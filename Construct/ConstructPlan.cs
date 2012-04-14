@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Construct
 {
@@ -7,6 +8,7 @@ namespace Construct
         private readonly IList<PlanAction<TConstructable>> _planActions;
         private readonly IConstructPlanner _constructPlanner;
 
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By Design.")]
         public ConstructPlan(IList<PlanAction<TConstructable>> planActions, IConstructPlanner constructPlanner)
         {
             Require.NotNull(planActions, "planActions");

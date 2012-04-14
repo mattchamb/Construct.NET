@@ -8,6 +8,6 @@ namespace Construct
         Action<TConstruct, TArg> CreateAssignmentFunction<TConstruct, TArg>(PropertyInfo propertyInfo);
         Action<TConstruct, TArg> CreateAssignmentFunctionWithCast<TConstruct, TArg>(PropertyInfo propertyInfo);
         Func<TConstruct, TResult> CreateReaderFunction<TConstruct, TResult>(PropertyInfo propertyInfo);
-        Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiator(Type complexActionType);
+        Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiationFunction(Type complexActionType);
     }
 }

@@ -13,22 +13,22 @@ namespace Construct.Tests
 
         public static Stream Create(int value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(uint value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(long value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(ulong value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(byte value)
@@ -43,22 +43,22 @@ namespace Construct.Tests
 
         public static Stream Create(short value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(ushort value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(float value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
 
         public static Stream Create(double value, ByteOrder byteOrder)
         {
-            return Create(BitConverter.GetBytes(ByteOrderer.ToOutputOrder(value, byteOrder)));
+            return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
         }
     }
 }

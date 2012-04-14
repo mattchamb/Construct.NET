@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using Construct.Exceptions;
 
 namespace Construct
 {
@@ -37,21 +38,21 @@ namespace Construct
         {
             var data = ReadBytes(2);
             var value = BitConverter.ToInt16(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public ushort ReadUInt16(ByteOrder byteOrder)
         {
             var data = ReadBytes(2);
             var value = BitConverter.ToUInt16(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public int ReadInt32(ByteOrder byteOrder)
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToInt32(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public Enum ReadEnum(Type enumType, ByteOrder byteOrder)
@@ -107,37 +108,37 @@ namespace Construct
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToUInt32(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public long ReadInt64(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToInt64(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public ulong ReadUInt64(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToUInt64(data, 0);
-            return ByteOrderer.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.ToHostOrder(value, byteOrder);
         }
 
         public float ReadSingle(ByteOrder byteOrder)
         {
             var data = ReadBytes(4);
             var value = BitConverter.ToInt32(data, 0);
-            value = ByteOrderer.ToHostOrder(value, byteOrder);
-            return ByteOrderer.IntegerToFloat(value);
+            value = ByteOrderConverter.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.IntegerToFloat(value);
         }
 
         public double ReadDouble(ByteOrder byteOrder)
         {
             var data = ReadBytes(8);
             var value = BitConverter.ToInt64(data, 0);
-            value = ByteOrderer.ToHostOrder(value, byteOrder);
-            return ByteOrderer.LongToDouble(value);
+            value = ByteOrderConverter.ToHostOrder(value, byteOrder);
+            return ByteOrderConverter.LongToDouble(value);
         }
 
         private byte[] ReadBytes(int count)

@@ -83,49 +83,49 @@ namespace Construct
 
         public void WriteInt16(Int16 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteUInt16(UInt16 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteInt32(Int32 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteInt64(Int64 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteSingle(float value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteDouble(double value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteUInt32(UInt32 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 
         public void WriteUInt64(UInt64 value, ByteOrder byteOrder)
         {
-            var outputValue = ByteOrderer.ToOutputOrder(value, byteOrder);
+            var outputValue = ByteOrderConverter.ToOutputOrder(value, byteOrder);
             Write(BitConverter.GetBytes(outputValue));
         }
 

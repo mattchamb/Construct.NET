@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Construct.Exceptions;
 using NUnit.Framework;
 
 namespace Construct.Tests

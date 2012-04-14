@@ -60,14 +60,14 @@ namespace Construct
             return function;
         }
 
-        public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiator(Type complexActionType)
+        public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiationFunction(Type complexActionType)
         {
             Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> cachedFunction;
             if (_instantiatorCache.TryGetValue(complexActionType, out cachedFunction))
             {
                 return cachedFunction;
             }
-            var function = _lambdaGenerator.CreateComplexActionInstantiator(complexActionType);
+            var function = _lambdaGenerator.CreateComplexActionInstantiationFunction(complexActionType);
             _instantiatorCache.Add(complexActionType, function);
             return function;
         }

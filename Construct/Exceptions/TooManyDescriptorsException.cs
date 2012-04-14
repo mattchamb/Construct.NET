@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Construct
+namespace Construct.Exceptions
 {
     [Serializable]
     public class TooManyDescriptorsException : Exception

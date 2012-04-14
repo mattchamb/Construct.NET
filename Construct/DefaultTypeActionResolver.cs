@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using Construct.Actions;
+using Construct.Attributes;
 
 namespace Construct
 {
@@ -28,67 +29,67 @@ namespace Construct
             return result;
         }
 
-        protected virtual PlanAction<T> ResolveForComplexElement<T>(PropertyInfo property, ComplexElementAttribute complexElementAttribute)
+        protected virtual PlanAction<T> ResolveForComplexElement<T>(PropertyInfo propertyInfo, ComplexElementAttribute complexElementAttribute)
         {
             var complexActionType = typeof (ComplexAction<,>);
-            var genericComplexAction = complexActionType.MakeGenericType(typeof(T), property.PropertyType);
-            var instantiatorFunction = _lambdaGenerator.CreateComplexActionInstantiator(genericComplexAction);
-            var result = instantiatorFunction(property, complexElementAttribute.DataByteOrder, _lambdaGenerator);
+            var genericComplexAction = complexActionType.MakeGenericType(typeof(T), propertyInfo.PropertyType);
+            var instantiatorFunction = _lambdaGenerator.CreateComplexActionInstantiationFunction(genericComplexAction);
+            var result = instantiatorFunction(propertyInfo, complexElementAttribute.DataByteOrder, _lambdaGenerator);
             return (PlanAction<T>) result;
         }
 
-        protected virtual PlanAction<T> ResolveForPrimitiveElement<T>(PropertyInfo property, PrimitiveElementAttribute primitiveElementAttribute)
+        protected virtual PlanAction<T> ResolveForPrimitiveElement<T>(PropertyInfo propertyInfo, PrimitiveElementAttribute primitiveElementAttribute)
         {
-            var propertyType = property.PropertyType;
+            var propertyType = propertyInfo.PropertyType;
 
             if (propertyType == typeof(int))
             {
-                return new Int32Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new Int32Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(uint))
             {
-                return new UInt32Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new UInt32Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(byte))
             {
-                return new ByteAction<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new ByteAction<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(sbyte))
             {
-                return new SByteAction<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new SByteAction<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(short))
             {
-                return new Int16Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new Int16Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(ushort))
             {
-                return new UInt16Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new UInt16Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(long))
             {
-                return new Int64Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new Int64Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(ulong))
             {
-                return new UInt64Action<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new UInt64Action<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(float))
             {
-                return new FloatAction<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new FloatAction<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType == typeof(double))
             {
-                return new DoubleAction<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new DoubleAction<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
             if (propertyType.IsEnum)
             {
-                return new EnumAction<T>(property, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
+                return new EnumAction<T>(propertyInfo, primitiveElementAttribute.DataByteOrder, _lambdaGenerator);
             }
-            throw new ArgumentOutOfRangeException("property",
+            throw new ArgumentOutOfRangeException("propertyInfo",
                                                   string.Format(CultureInfo.CurrentCulture,
                                                                 "The property \"{0}\" did not match any of the expected types for a primitive field.",
-                                                                property.Name));
+                                                                propertyInfo.Name));
         }
     }
 }

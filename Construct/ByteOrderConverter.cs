@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Construct
 {
-    public static class ByteOrderer
+    public static class ByteOrderConverter
     {
         private static uint SignedToUnsignedInteger(int value)
         {
@@ -41,6 +42,7 @@ namespace Construct
             return BitConverter.ToInt32(bytes, 0);
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = "We are converting between types, so the name should say what types we are converting.")]
         public static float IntegerToFloat(int value)
         {
             var bytes = BitConverter.GetBytes(value);

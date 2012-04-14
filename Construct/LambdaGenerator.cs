@@ -44,7 +44,7 @@ namespace Construct
             return readerExpression.Compile();
         }
 
-        public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiator(Type complexActionType)
+        public Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiationFunction(Type complexActionType)
         {
             Require.NotNull(complexActionType, "complexActionType");
 

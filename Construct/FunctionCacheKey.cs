@@ -5,42 +5,27 @@ namespace Construct
 {
     public class FunctionCacheKey : IEquatable<FunctionCacheKey>
     {
-        private readonly Type _tConstruct;
-        private readonly Type _tArg;
-        private readonly PropertyInfo _property;
+        public PropertyInfo PropertyInfo { get; private set; }
+        public Type ArgumentType { get; private set; }
+        public Type ConstructType { get; private set; }
 
-        public FunctionCacheKey(Type tConstruct, Type tArg, PropertyInfo property)
+        public FunctionCacheKey(Type constructType, Type argumentType, PropertyInfo propertyInfo)
         {
-            _tConstruct = tConstruct;
-            _tArg = tArg;
-            _property = property;
-        }
-
-        public PropertyInfo Property
-        {
-            get { return _property; }
-        }
-
-        public Type Arg
-        {
-            get { return _tArg; }
-        }
-
-        public Type Construct
-        {
-            get { return _tConstruct; }
+            ConstructType = constructType;
+            ArgumentType = argumentType;
+            PropertyInfo = propertyInfo;
         }
 
         public bool Equals(FunctionCacheKey other)
         {
-            return Arg == other.Arg && Construct == other.Construct && Property == other.Property;
+            return ArgumentType == other.ArgumentType && ConstructType == other.ConstructType && PropertyInfo == other.PropertyInfo;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return Arg.GetHashCode() ^ Construct.GetHashCode() ^ Property.GetHashCode();
+                return ArgumentType.GetHashCode() ^ ConstructType.GetHashCode() ^ PropertyInfo.GetHashCode();
             }
         }
 

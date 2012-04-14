@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Construct.Attributes;
 using NUnit.Framework;
 
 namespace Construct.Tests
@@ -13,7 +14,7 @@ namespace Construct.Tests
         [Constructable]
         public class Constructable
         {
-            [PrimitiveElement(1, typeof(int))]
+            [PrimitiveElement(1)]
             public int Property { get; set; }
         }
 
