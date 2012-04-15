@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Construct.Infrastructure;
 
 namespace Construct.Actions
 {
@@ -11,21 +12,21 @@ namespace Construct.Actions
         /// <param name="property"></param>
         /// <param name="inputByteOrder">This doesnt matter for "Complex" types because they will have their own nested byte order directives.</param>
         /// <param name="lambdaGenerator"></param>
-        public ComplexAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
-            : base(property, inputByteOrder, lambdaGenerator)
+        public ComplexAction(PropertyInfo property, ByteOrder inputByteOrder, string conditionFunction, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, conditionFunction, lambdaGenerator)
         {
             _assignmentFunction = LambdaGenerator.CreateAssignmentFunctionWithCast<TConstructable, object>(Property);
             _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, TNestedConstructable>(Property);
         }
 
-        public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
+        protected override void Read(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             var nestedConstructPlan = constructPlanner.CreatePlan<TNestedConstructable>();
             var value = nestedConstructPlan.ReadConstruct(inputStream);
             _assignmentFunction(obj, value);
         }
 
-        public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
+        protected override void Write(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
             var nestedConstructPlan = constructPlanner.CreatePlan<TNestedConstructable>();
             var nestedConstructable = _readerFunction(obj);

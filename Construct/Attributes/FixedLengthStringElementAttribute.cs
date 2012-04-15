@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Construct.Infrastructure;
 
 namespace Construct.Attributes
 {
@@ -10,21 +11,22 @@ namespace Construct.Attributes
         public Encoding TextEncoding { get; private set; }
         public int SerializationOrder { get; private set; }
         public ByteOrder DataByteOrder { get; private set; }
+        public string Condition { get; set; }
 
         public FixedLengthStringElementAttribute(int serializationOrder, int length) 
-            : this(serializationOrder, length, Encoding.ASCII)
+            : this(serializationOrder, length, "ASCII")
         {
         }
 
-        public FixedLengthStringElementAttribute(int serializationOrder, int length, Encoding textEncoding)
+        public FixedLengthStringElementAttribute(int serializationOrder, int length, string textEncoding)
         {
-            Require.NotNull(textEncoding, "textEncoding");
-            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
-            Require.That(length, "length", length >= 0);
+            Require.NotNullOrEmpty(textEncoding, "textEncoding");
+            Require.That("serializationOrder", serializationOrder >= 0);
+            Require.That("length", length >= 0);
 
             SerializationOrder = serializationOrder;
             Length = length;
-            TextEncoding = textEncoding;
+            TextEncoding = Encoding.GetEncoding(textEncoding);
             DataByteOrder = ByteOrder.None;
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using Construct.Infrastructure;
 
 namespace Construct
 {
@@ -11,7 +12,7 @@ namespace Construct
         public ConstructWriterStream(Stream baseStream)
         {
             Require.NotNull(baseStream, "baseStream");
-            Require.That(baseStream, "baseStream", baseStream.CanWrite);
+            Require.That("baseStream", baseStream.CanWrite);
             _baseStream = baseStream;
         }
 
@@ -38,6 +39,11 @@ namespace Construct
         public override void Write(byte[] buffer, int offset, int count)
         {
             _baseStream.Write(buffer, offset, count);
+        }
+
+        public void WriteBytes(byte[] value)
+        {
+            Write(value, 0, value.Length);
         }
 
         public override bool CanRead
@@ -132,7 +138,7 @@ namespace Construct
         public void WriteEnum(Enum value, ByteOrder byteOrder)
         {
             var enumType = value.GetType();
-            Require.That(value, "value", enumType.IsEnum);
+            Require.That("value", enumType.IsEnum);
             var enumBaseType = Enum.GetUnderlyingType(enumType);
             
             if (enumBaseType == typeof(byte))

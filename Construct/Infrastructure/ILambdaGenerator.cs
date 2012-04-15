@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Construct
+namespace Construct.Infrastructure
 {
     public interface ILambdaGenerator
     {
@@ -9,5 +9,6 @@ namespace Construct
         Action<TConstruct, TArg> CreateAssignmentFunctionWithCast<TConstruct, TArg>(PropertyInfo propertyInfo);
         Func<TConstruct, TResult> CreateReaderFunction<TConstruct, TResult>(PropertyInfo propertyInfo);
         Func<PropertyInfo, ByteOrder, ILambdaGenerator, object> CreateComplexActionInstantiationFunction(Type complexActionType);
+        Func<TConstruct, bool> CreateConditionCheckingFunction<TConstruct>(string conditionalFunctionName);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Construct.Infrastructure;
 
 namespace Construct.Actions
 {
@@ -8,20 +9,20 @@ namespace Construct.Actions
         private readonly Action<TConstructable, uint>  _assignmentFunction;
         private readonly Func<TConstructable, uint> _readerFunction;
 
-        public UInt32Action(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
-            : base(property, inputByteOrder, lambdaGenerator)
+        public UInt32Action(PropertyInfo property, ByteOrder inputByteOrder, string conditionFunction, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, conditionFunction, lambdaGenerator)
         {
             _assignmentFunction = LambdaGenerator.CreateAssignmentFunction<TConstructable, UInt32>(Property);
             _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, UInt32>(Property);
         }
 
-        public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
+        protected override void Read(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             uint value = inputStream.ReadUInt32(InputByteOrder);
             _assignmentFunction(obj, value);
         }
 
-        public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
+        protected override void Write(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
             var value = _readerFunction (obj);
             outputStream.WriteUInt32(value, InputByteOrder);

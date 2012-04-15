@@ -47,23 +47,25 @@
     <Compile Include="Actions\ByteAction.cs" />
     <Compile Include="Actions\ComplexAction.cs" />
     <Compile Include="Actions\DoubleAction.cs" />
+    <Compile Include="Actions\FixedLengthStringAction.cs" />
     <Compile Include="Actions\FloatAction.cs" />
     <Compile Include="Actions\SByteAction.cs" />
-    <Compile Include="ByteOrderConverter.cs" />
-    <Compile Include="CachedLambdaGenerator.cs" />
+    <Compile Include="Exceptions\FixedLengthStringException.cs" />
+    <Compile Include="Infrastructure\ByteOrderConverter.cs" />
     <Compile Include="DefaultTypeActionResolver.cs" />
     <Compile Include="Attributes\FieldBasedStringElementAttribute.cs" />
     <Compile Include="Attributes\FixedLengthStringElementAttribute.cs" />
+    <Compile Include="Exceptions\ConditionalBindingException.cs" />
     <Compile Include="FunctionCacheKey.cs" />
-    <Compile Include="ILambdaGenerator.cs" />
-    <Compile Include="ITypeActionResolver.cs" />
+    <Compile Include="Infrastructure\ILambdaGenerator.cs" />
+    <Compile Include="Infrastructure\ITypeActionResolver.cs" />
     <Compile Include="Attributes\LengthPrefixedStringElementAttribute.cs" />
     <Compile Include="PropertyConstructDescriptor.cs" />
     <Compile Include="Exceptions\TooManyDescriptorsException.cs" />
     <Compile Include="ConstructPlanner.cs" />
     <Compile Include="Actions\EnumAction.cs" />
     <Compile Include="ConstructWriterStream.cs" />
-    <Compile Include="IConstructPlanner.cs" />
+    <Compile Include="Infrastructure\IConstructPlanner.cs" />
     <Compile Include="ByteOrder.cs" />
     <Compile Include="Actions\Int16Action.cs" />
     <Compile Include="Actions\Int64Action.cs" />
@@ -77,11 +79,11 @@
     <Compile Include="Actions\UInt16Action.cs" />
     <Compile Include="Actions\UInt32Action.cs" />
     <Compile Include="LambdaGenerator.cs" />
-    <Compile Include="IConstructElementDescriptor.cs" />
+    <Compile Include="Infrastructure\IConstructElementDescriptor.cs" />
     <Compile Include="Attributes\PrimitiveElementAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionHelper.cs" />
-    <Compile Include="Require.cs" />
+    <Compile Include="Infrastructure\ReflectionHelper.cs" />
+    <Compile Include="Infrastructure\Require.cs" />
     <Compile Include="Actions\UInt64Action.cs" />
   </ItemGroup>
   <ItemGroup />

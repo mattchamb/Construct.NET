@@ -1,6 +1,4 @@
-using System;
-
-namespace Construct
+namespace Construct.Infrastructure
 {
     public interface ITypeActionResolver
     {

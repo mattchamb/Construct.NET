@@ -5,7 +5,7 @@ using System.Reflection;
 using Construct.Attributes;
 using Construct.Exceptions;
 
-namespace Construct
+namespace Construct.Infrastructure
 {
     public static class ReflectionHelper
     {

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using Construct.Exceptions;
+using Construct.Infrastructure;
 
 namespace Construct
 {
@@ -71,5 +74,33 @@ namespace Construct
             return creatorLambda.Compile();
         }
 
+        public Func<TConstruct, bool> CreateConditionCheckingFunction<TConstruct>(string conditionalFunctionName)
+        {
+            Require.NotNullOrEmpty(conditionalFunctionName, "conditionalFunctionName");
+            var constructType = typeof (TConstruct);
+            Require.That("TConstruct", constructType.IsConstructable());
+
+            var conditionalMethodInfo = constructType.GetMethod(conditionalFunctionName, Type.EmptyTypes);
+            if(conditionalMethodInfo == null)
+            {
+                throw new ConditionalBindingException(
+                    string.Format(CultureInfo.InvariantCulture,
+                                  "Could not find appropriate member for conditional function name \"{0}\"",
+                                  conditionalFunctionName));
+            }
+            if(conditionalMethodInfo.ReturnType != typeof(bool))
+            {
+                throw new ConditionalBindingException(
+                    string.Format(CultureInfo.InvariantCulture,
+                                  "The method found for conditional name \"{0}\" did not return a boolean value. " +
+                                  "The method found was \"{1}\"", conditionalFunctionName, conditionalMethodInfo));
+            }
+            var constructArg = Expression.Parameter(constructType, "construct");
+
+            var invokeExpression = Expression.Call(constructArg, conditionalMethodInfo);
+
+            var invokeLambda = Expression.Lambda<Func<TConstruct, bool>>(invokeExpression, constructArg);
+            return invokeLambda.Compile();
+        }
     }
 }

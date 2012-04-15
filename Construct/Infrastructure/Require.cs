@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Construct
+namespace Construct.Infrastructure
 {
     internal static class Require
     {
@@ -16,14 +16,21 @@ namespace Construct
             }
         }
 
-        public static void That<T>(T value, string argName, bool requirement)
+        public static void That(string argName, bool requirement)
         {
             NotNull(argName, "argName");
-            NotNull(value, "value");
-
             if(!requirement)
             {
                 throw new ArgumentException("The provided argument did not meet the specified requirements.", argName);
+            }
+        }
+
+        public static void NotNullOrEmpty(string value, string argName)
+        {
+            NotNull(argName, "argName");
+            if(string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentException("This value cannot be null or empty.", argName);
             }
         }
     }

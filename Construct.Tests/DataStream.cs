@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
+using System.Text;
+using Construct.Infrastructure;
 
 namespace Construct.Tests
 {
@@ -59,6 +60,11 @@ namespace Construct.Tests
         public static Stream Create(double value, ByteOrder byteOrder)
         {
             return Create(BitConverter.GetBytes(ByteOrderConverter.ToOutputOrder(value, byteOrder)));
+        }
+
+        internal static Stream Create(string value, Encoding encoding)
+        {
+            return Create(encoding.GetBytes(value));
         }
     }
 }

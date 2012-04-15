@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using Construct.Exceptions;
+using Construct.Infrastructure;
 
 namespace Construct
 {
@@ -12,7 +12,7 @@ namespace Construct
         public ConstructReaderStream(Stream baseStream)
         {
             Require.NotNull(baseStream, "baseStream");
-            Require.That(baseStream, "baseStream", baseStream.CanRead);
+            Require.That("baseStream", baseStream.CanRead);
             _baseStream = baseStream;
         }
 
@@ -58,7 +58,7 @@ namespace Construct
         public Enum ReadEnum(Type enumType, ByteOrder byteOrder)
         {
             Require.NotNull(enumType, "enumType");
-            Require.That(enumType, "enumType", enumType.IsEnum);
+            Require.That("enumType", enumType.IsEnum);
 
             var enumBaseType = enumType.GetEnumUnderlyingType();
             if (enumBaseType == typeof(byte))
@@ -141,9 +141,9 @@ namespace Construct
             return ByteOrderConverter.LongToDouble(value);
         }
 
-        private byte[] ReadBytes(int count)
+        public byte[] ReadBytes(int count)
         {
-            Require.That(count, "count", count > 0);
+            Require.That("count", count > 0);
             var data = new byte[count];
             int readSoFar = 0;
             while(readSoFar != count)

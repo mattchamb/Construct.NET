@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Construct.Infrastructure;
 
 namespace Construct.Attributes
 {
@@ -10,6 +11,7 @@ namespace Construct.Attributes
         public Encoding TextEncoding { get; private set; }
         public int SerializationOrder { get; private set; }
         public ByteOrder DataByteOrder { get; private set; }
+        public string Condition { get; set; }
 
         public LengthPrefixedStringElementAttribute(int serializationOrder, Type lengthType) 
             : this(serializationOrder, lengthType, Encoding.ASCII)
@@ -19,7 +21,7 @@ namespace Construct.Attributes
         public LengthPrefixedStringElementAttribute(int serializationOrder, Type lengthType, Encoding textEncoding)
         {
             Require.NotNull(textEncoding, "textEncoding");
-            Require.That(serializationOrder, "serializationOrder", serializationOrder >= 0);
+            Require.That("serializationOrder", serializationOrder >= 0);
 
             SerializationOrder = serializationOrder;
             LengthType = lengthType;

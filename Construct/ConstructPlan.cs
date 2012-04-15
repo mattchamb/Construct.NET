@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Construct.Infrastructure;
 
 namespace Construct
 {
@@ -13,7 +14,7 @@ namespace Construct
         {
             Require.NotNull(planActions, "planActions");
             Require.NotNull(constructPlanner, "constructPlanner");
-            Require.That(typeof(TConstructable), "TConstructable", typeof(TConstructable).IsConstructable());
+            Require.That("TConstructable", typeof(TConstructable).IsConstructable());
 
             _planActions = planActions;
             _constructPlanner = constructPlanner;

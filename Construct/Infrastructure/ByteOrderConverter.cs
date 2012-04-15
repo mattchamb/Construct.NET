@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace Construct
+namespace Construct.Infrastructure
 {
     public static class ByteOrderConverter
     {

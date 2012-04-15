@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Construct.Infrastructure;
 using Construct.Tests.Constructs;
 using NUnit.Framework;
 

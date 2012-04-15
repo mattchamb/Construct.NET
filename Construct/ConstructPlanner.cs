@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Construct.Infrastructure;
 
 namespace Construct
 {
@@ -10,7 +11,7 @@ namespace Construct
         private readonly Dictionary<Type, object> _planCache;
 
         public ConstructPlanner() 
-            : this(new DefaultTypeActionResolver(new CachedLambdaGenerator()))
+            : this(new DefaultTypeActionResolver(new LambdaGenerator()))
         {
         }
 
@@ -37,7 +38,7 @@ namespace Construct
         private List<PlanAction<TConstructable>> CreatePlanActionsForType<TConstructable>() where TConstructable : new()
         {
             var constructType = typeof (TConstructable);
-            Require.That(constructType, "TConstructable", constructType.IsConstructable());
+            Require.That("TConstructable", constructType.IsConstructable());
 
             var constructProperties = constructType.GetProperties();
             var propertyDescriptors = constructProperties.Select(property => property.GetElementDescriptor()).Where(x => x != null);

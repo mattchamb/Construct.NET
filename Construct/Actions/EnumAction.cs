@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Construct.Infrastructure;
 
 namespace Construct.Actions
 {
@@ -8,21 +9,21 @@ namespace Construct.Actions
         private readonly Action<TConstructable, Enum>  _assignmentFunction;
         private readonly Func<TConstructable, Enum>  _readerFunction;
 
-        public EnumAction(PropertyInfo property, ByteOrder inputByteOrder, ILambdaGenerator lambdaGenerator)
-            : base(property, inputByteOrder, lambdaGenerator)
+        public EnumAction(PropertyInfo property, ByteOrder inputByteOrder, string conditionFunction, ILambdaGenerator lambdaGenerator)
+            : base(property, inputByteOrder, conditionFunction, lambdaGenerator)
         {
             _assignmentFunction = LambdaGenerator.CreateAssignmentFunctionWithCast<TConstructable, Enum>(Property);
             _readerFunction = LambdaGenerator.CreateReaderFunction<TConstructable, Enum>(Property);
         }
 
-        public override void ApplyReadAction(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
+        protected override void Read(TConstructable obj, ConstructReaderStream inputStream, IConstructPlanner constructPlanner)
         {
             Enum value = inputStream.ReadEnum(Property.PropertyType, InputByteOrder);
             
             _assignmentFunction(obj, value);
         }
 
-        public override void ApplyWriteAction(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
+        protected override void Write(TConstructable obj, ConstructWriterStream outputStream, IConstructPlanner constructPlanner)
         {
             
             var value = _readerFunction(obj);

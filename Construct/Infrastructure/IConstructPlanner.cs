@@ -1,4 +1,4 @@
-namespace Construct
+namespace Construct.Infrastructure
 {
     public interface IConstructPlanner
     {
